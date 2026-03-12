@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Plataforma de Estudos EnemPrep";
+    Layout = "_Layout";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4 fw-bold text-primary mb-3">EnemPrep</h1>
+    <p class="lead text-secondary mb-5">Organize seus estudos, assista videoaulas, treine com milhares de questões e
+        conquiste a sua aprovação no ENEM e vestibulares.</p>
+
+    <div class="d-flex justify-content-center gap-3">
+        <a asp-controller="Auth" asp-action="Register" class="btn btn-primary btn-lg px-5 shadow-sm">Começar Agora
+            (Grátis)</a>
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-secondary btn-lg px-5">Já tenho uma conta</a>
+    </div>
+
+    <div class="row mt-5 pt-5 text-start justify-content-center g-4">
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="display-5 text-primary mb-3">📚</div>
+                    <h5 class="fw-bold">Aulas e Materiais</h5>
+                    <p class="text-muted small">Conteúdo organizado por matérias e assuntos na medida certa.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="display-5 text-success mb-3">🎯</div>
+                    <h5 class="fw-bold">Treino em Questões</h5>
+                    <p class="text-muted small">Maior banco de questões focadas no ENEM para você praticar.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="display-5 text-warning mb-3">🔥</div>
+                    <h5 class="fw-bold">Mantenha seu Fogo</h5>
+                    <p class="text-muted small">Não quebre a corrente! Mantenha seu streak (fogo) estudando todos os
+                        dias.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="EnemPrep.Api/EnemPrep.Api.csproj" />
+  <Project Path="EnemPrep.Application/EnemPrep.Application.csproj" />
+  <Project Path="EnemPrep.Domain/EnemPrep.Domain.csproj" />
+  <Project Path="EnemPrep.Infrastructure/EnemPrep.Infrastructure.csproj" />
+  <Project Path="EnemPrep.Web/EnemPrep.Web.csproj" />
+</Solution>

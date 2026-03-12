@@ -1,0 +1,105 @@
+@model EnemPrep.Web.Models.Shared.PerfilViewModel
+@{
+    ViewData["Title"] = "Meu Perfil";
+    Layout = "_LayoutAluno";
+}
+
+<div class="max-w-3xl mx-auto space-y-8">
+    <!-- Header do Perfil -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-500 h-28"></div>
+        <div class="px-8 pb-8">
+            <div class="relative flex justify-between items-end -mt-14 mb-6">
+                <div class="w-28 h-28 rounded-full border-4 border-white bg-indigo-100 flex items-center justify-center text-indigo-600 text-5xl font-bold shadow-lg">
+                    @Model.Nome.Substring(0, 1).ToUpper()
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">@Model.Nome</h2>
+            <p class="text-gray-500">@Model.Email</p>
+            <p class="text-sm text-gray-400 mt-1">Membro desde @Model.DataCriacao.ToString("MMMM/yyyy")</p>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="bg-white rounded-xl shadow-sm p-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-6">📊 Minhas Estatísticas</h3>
+
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-orange-50 border border-orange-100 p-5 rounded-xl">
+                <dt class="text-sm font-medium text-orange-600">🔥 Streak</dt>
+                <dd class="mt-2 text-3xl font-bold text-gray-900">@Model.StreakDias <span class="text-base font-normal text-gray-500">dias seguidos</span></dd>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-100 p-5 rounded-xl">
+                <dt class="text-sm font-medium text-blue-600">🎯 Precisão</dt>
+                @{
+                    double precision = Model.QuestoesRespondidas > 0
+                        ? Math.Round((double)Model.QuestoesCorretas / Model.QuestoesRespondidas * 100, 1)
+                        : 0;
+                }
+                <dd class="mt-2 text-3xl font-bold text-gray-900">@precision<span class="text-base font-normal text-gray-500">%</span></dd>
+            </div>
+
+            <div class="bg-green-50 border border-green-100 p-5 rounded-xl">
+                <dt class="text-sm font-medium text-green-600">✅ Questões Acertadas</dt>
+                <dd class="mt-2 text-3xl font-bold text-gray-900">@Model.QuestoesCorretas</dd>
+            </div>
+
+            <div class="bg-purple-50 border border-purple-100 p-5 rounded-xl">
+                <dt class="text-sm font-medium text-purple-600">📝 Questões Respondidas</dt>
+                <dd class="mt-2 text-3xl font-bold text-gray-900">@Model.QuestoesRespondidas</dd>
+            </div>
+        </dl>
+    </div>
+
+    <!-- Editar Dados -->
+    <div class="bg-white rounded-xl shadow-sm p-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-6">✏️ Editar Dados</h3>
+
+        <!-- Nome -->
+        <form asp-action="AtualizarNome" method="post" class="mb-6 pb-6 border-b border-gray-100">
+            @Html.AntiForgeryToken()
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+            <div class="flex gap-3">
+                <input type="text" name="novoNome" value="@Model.Nome" required
+                       class="flex-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                <button type="submit"
+                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Salvar
+                </button>
+            </div>
+        </form>
+
+        <!-- Email -->
+        <form asp-action="AtualizarEmail" method="post" class="mb-6 pb-6 border-b border-gray-100">
+            @Html.AntiForgeryToken()
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <div class="flex gap-3">
+                <input type="email" name="novoEmail" value="@Model.Email" required
+                       class="flex-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                <button type="submit"
+                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Salvar
+                </button>
+            </div>
+        </form>
+
+        <!-- Senha -->
+        <form asp-action="AtualizarSenha" method="post">
+            @Html.AntiForgeryToken()
+            <label class="block text-sm font-medium text-gray-700 mb-2">Alterar Senha</label>
+            <div class="space-y-3">
+                <input type="password" name="senhaAtual" placeholder="Senha atual" required
+                       class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                <input type="password" name="novaSenha" placeholder="Nova senha (mínimo 6 caracteres)" required minlength="6"
+                       class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                <input type="password" name="confirmarSenha" placeholder="Confirmar nova senha" required minlength="6"
+                       class="block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                <button type="submit"
+                        class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Alterar Senha
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

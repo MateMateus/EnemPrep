@@ -1,0 +1,62 @@
+@model List<EnemPrep.Web.Areas.Admin.ViewModels.Questoes.QuestaoViewModel>
+
+@{
+    ViewData["Title"] = "Questões";
+    Guid assuntoId = ViewBag.AssuntoId;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">❓ Questões</h1>
+    <a asp-action="Criar" asp-route-assuntoId="@assuntoId" class="btn btn-primary">+ Nova Questão</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhuma questão cadastrada para este assunto.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Enunciado</th>
+                    <th>Dificuldade</th>
+                    <th>Alternativas</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var q in Model)
+                {
+                    <tr>
+                        <td style="max-width:400px">
+                            <span class="text-truncate d-block">@q.Enunciado</span>
+                        </td>
+                        <td>
+                            @{
+                                var badgeClass = q.Dificuldade switch
+                                {
+                                    "Facil" => "bg-success",
+                                    "Medio" => "bg-warning text-dark",
+                                    "Dificil" => "bg-danger",
+                                    _ => "bg-secondary"
+                                };
+                            }
+                            <span class="badge @badgeClass">@q.Dificuldade</span>
+                        </td>
+                        <td>@q.TotalAlternativas</td>
+                        <td class="text-end">
+                            <form asp-action="Deletar" method="post" onsubmit="return confirm('Remover questão?')">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@q.Id" />
+                                <input type="hidden" name="assuntoId" value="@assuntoId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

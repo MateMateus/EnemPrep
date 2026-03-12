@@ -1,0 +1,53 @@
+@model IEnumerable<EnemPrep.Web.ViewModels.Simulados.SimuladoResumoViewModel>
+@{
+    ViewData["Title"] = "Simulados Avançados";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 mb-0">Simulados Avançados</h1>
+            <a asp-action="Historico" class="btn btn-outline-secondary">Ver Meu Histórico</a>
+        </div>
+        <p class="text-muted">Desafie-se com provas completas simulando as condições reais do ENEM.</p>
+    </div>
+</div>
+
+<div class="row">
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center text-muted p-5 bg-light rounded shadow-sm">
+            <h5>Nenhum simulado disponível ainda.</h5>
+            <p>Os simulados serão liberados em breve pelos administradores.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var simulado in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold text-primary mb-0">@simulado.Titulo</h5>
+                            @if (simulado.AnoReferencia.HasValue)
+                            {
+                                <span class="badge bg-secondary">ENEM @simulado.AnoReferencia</span>
+                            }
+                        </div>
+
+                        <p class="card-text text-muted small mt-3">
+                            <i class="bi bi-clock"></i> Tempo: @simulado.DuracaoMaxima.Hours h @simulado.DuracaoMaxima.Minutes
+                            min<br />
+                            <i class="bi bi-ui-checks"></i> Questões: @simulado.QuantidadeQuestoes
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3 pt-0">
+                        <a asp-action="Instrucoes" asp-route-id="@simulado.Id" class="btn btn-primary w-100 fw-bold">Fazer
+                            Simulado</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

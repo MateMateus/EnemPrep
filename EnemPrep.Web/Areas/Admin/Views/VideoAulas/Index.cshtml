@@ -1,0 +1,47 @@
+@model List<EnemPrep.Web.Models.Shared.VideoAulaViewModel>
+
+@{
+    ViewData["Title"] = "Videoaulas";
+    Guid assuntoId = ViewBag.AssuntoId;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">🎬 Videoaulas</h1>
+    <a asp-action="Criar" asp-route-assuntoId="@assuntoId" class="btn btn-primary">+ Nova Videoaula</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhuma videoaula cadastrada para este assunto.</div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var v in Model)
+        {
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@v.Titulo</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                ⏱ @TimeSpan.FromSeconds(v.DuracaoSegundos).ToString(@"hh\:mm\:ss")
+                            </small>
+                        </p>
+                        <a href="@v.UrlVideo" target="_blank" class="btn btn-sm btn-outline-primary">
+                            ▶ Abrir vídeo
+                        </a>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <form asp-action="Deletar" method="post" onsubmit="return confirm('Remover videoaula?')">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@v.Id" />
+                            <input type="hidden" name="assuntoId" value="@assuntoId" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remover</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

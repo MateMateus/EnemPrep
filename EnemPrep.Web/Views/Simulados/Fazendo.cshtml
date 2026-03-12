@@ -1,0 +1,110 @@
+@model EnemPrep.Web.Models.Simulados.SimuladoDetalhe
+@{
+    ViewData["Title"] = "Simulado em Progresso: " + Model.Titulo;
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between">
+            <h3 class="mb-0 text-primary fw-bold">@Model.Titulo</h3>
+            <div class="bg-dark text-white rounded px-3 py-2 fw-bold" id="timerDisplay">
+                00:00:00
+            </div>
+        </div>
+    </div>
+
+    <form id="simuladoForm">
+        @for (int i = 0; i < Model.Questoes.Count; i++)
+        {
+            var q = Model.Questoes[i];
+            <div class="card mb-4 shadow-sm simulado-questao" id="q_@q.Id">
+                <div class="card-header bg-light">
+                    <strong>Questão @(i + 1)</strong> <span class="badge bg-secondary">@q.NomeAssunto</span>
+                </div>
+                <div class="card-body">
+                    <p class="mb-4" style="white-space: pre-wrap">@q.Enunciado</p>
+
+                    <div class="list-group">
+                        @foreach (var alt in q.Alternativas)
+                        {
+                            <label class="list-group-item list-group-item-action d-flex align-items-start border rounded mb-2">
+                                <input class="form-check-input me-3 mt-1" type="radio" name="resposta_@q.Id" id="alt_@alt.Id"
+                                    value="@alt.Id">
+                                <div class="w-100">
+                                    <span class="d-block" style="white-space: pre-wrap">@alt.Texto</span>
+                                </div>
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="text-end mb-5">
+            <button type="button" id="btnSubmeter" class="btn btn-primary btn-lg px-5 fw-bold rounded-pill">
+                Finalizar e Entregar Simulado
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('btnSubmeter').addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!confirm("Atenção: Ao finalizar, você não poderá alterar suas respostas de nenhuma das @Model.Questoes.Count questões desta tentativa. Deseja entregar o simulado agora?")) {
+                return;
+            }
+
+            const respostasData = [];
+            const form = document.getElementById('simuladoForm');
+            const data = new FormData(form);
+
+        @foreach (var q in Model.Questoes)
+        {
+            <text>
+                        var altSelecionada_@q.Id = data.get('resposta_@q.Id');
+                        respostasData.push({
+                            questaoId: '@q.Id',
+                        alternativaId: altSelecionada_@q.Id ? altSelecionada_@q.Id : null
+                                });
+            </text>
+        }
+
+                    const payload = { respostas: respostasData };
+
+            fetch('@Url.Action("Submeter", "Simulados", new { tentativaId = ViewBag.TentativaId })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(async res => {
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok && data.redirectUrl) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        alert(data.message || 'Erro inesperado ao enviar o simulado.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro na comunicação com o servidor.');
+                });
+        });
+
+        // Basic timer UI (no validation on backend required for MVP)
+        let duracaoRestante = @Model.DuracaoMaxima.TotalSeconds;
+        setInterval(() => {
+            if (duracaoRestante <= 0) return;
+            duracaoRestante--;
+            const h = Math.floor(duracaoRestante / 3600).toString().padStart(2, '0');
+            const m = Math.floor((duracaoRestante % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(duracaoRestante % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = h + ":" + m + ":" + s;
+        }, 1000);
+    </script>
+}

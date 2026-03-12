@@ -1,0 +1,168 @@
+@model EnemPrep.Web.Models.Shared.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_LayoutAluno";
+}
+
+<div x-data="{
+        getGreeting() {
+            var hour = new Date().getHours();
+            if (hour < 12) return 'Bom dia';
+            if (hour < 18) return 'Boa tarde';
+            return 'Boa noite';
+        }
+    }" class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900"><span x-text="getGreeting()"></span>, @Model.NomeUsuario! 👋</h1>
+    <p class="text-gray-600 mt-1">Aqui está o resumo do seu progresso na plataforma acompanhando o seu ritmo de estudos.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Streak -->
+    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-orange-500">
+        <p class="text-sm font-medium text-gray-500 mb-1">🔥 Streak atual</p>
+        <div class="flex items-baseline space-x-2">
+            <h2 class="text-3xl font-bold text-gray-900">@Model.StreakAtual</h2>
+            <span class="text-gray-500">dias seguidos</span>
+        </div>
+        @if (Model.MaiorStreak > 0)
+        {
+            <p class="text-xs text-gray-400 mt-2">Seu recorde é @Model.MaiorStreak @(Model.MaiorStreak == 1 ? "dia" : "dias").</p>
+        }
+    </div>
+
+    <!-- Taxa de Acerto -->
+    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-indigo-500">
+        <p class="text-sm font-medium text-gray-500 mb-1">🎯 Taxa de Acerto Geral</p>
+        <div class="flex items-baseline space-x-2">
+            <h2 class="text-3xl font-bold text-gray-900">@Model.PercentualAcerto%</h2>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">Em @Model.TotalQuestoesRespondidas questões respondidas.</p>
+    </div>
+
+    <!-- Acertos -->
+    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-emerald-500">
+        <p class="text-sm font-medium text-gray-500 mb-1">✅ Questões Corretas</p>
+        <div class="flex items-baseline space-x-2">
+            <h2 class="text-3xl font-bold text-gray-900 text-emerald-600">@Model.TotalAcertos</h2>
+            <span class="text-gray-500">acertos totais</span>
+        </div>
+    </div>
+
+    <!-- Erros -->
+    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-red-500">
+        <p class="text-sm font-medium text-gray-500 mb-1">❌ Questões Incorretas</p>
+        <div class="flex items-baseline space-x-2">
+            <h2 class="text-3xl font-bold text-gray-900 text-red-600">@Model.TotalErros</h2>
+            <span class="text-gray-500">erros totais</span>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+        <!-- Progresso por Matéria -->
+        <div class="bg-white rounded-xl shadow p-6 border border-gray-100">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">Seu Progresso por Matéria</h3>
+            
+            @if (Model.QuestoesPorMateria.Any())
+            {
+                <div class="space-y-6">
+                    @foreach (var materia in Model.QuestoesPorMateria.OrderByDescending(m => m.TotalRespondidas))
+                    {
+                        var corMateria = materia.PercentualAcerto >= 70 ? "bg-emerald-500" : (materia.PercentualAcerto >= 40 ? "bg-amber-500" : "bg-red-500");
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-medium text-gray-800">@materia.NomeMateria</span>
+                                <span class="text-sm font-bold text-gray-700">@materia.PercentualAcerto%</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs text-gray-500 mb-2">
+                                <span>@materia.TotalAcertos acertos de @materia.TotalRespondidas questões</span>
+                                <span>@(materia.PercentualAcerto >= 70 ? "🎉 Excelente" : (materia.PercentualAcerto >= 40 ? "👍 Na média" : "⚠️ Precisa de atenção"))</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                                <div class="@corMateria h-2.5 rounded-full transition-all duration-500" style="width: @materia.PercentualAcerto.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)%"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                        <span class="text-2xl">📊</span>
+                    </div>
+                    <h4 class="text-lg font-medium text-gray-900">Nenhum dado ainda</h4>
+                    <p class="text-gray-500 mt-2">Comece a responder questões para visualizar o seu desempenho por matéria.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="space-y-6">
+        <div class="bg-indigo-50 rounded-xl shadow-sm p-6 border border-indigo-100">
+            <h3 class="text-lg font-bold text-indigo-900 mb-4">O que estudar agora?</h3>
+            <div class="space-y-3">
+                @if (Model.DesafioDiario != null && !Model.DesafioDiario.Concluido)
+                {
+                    <a href="/Questoes/Resolver/@Model.DesafioDiario.QuestaoId"
+                        class="flex items-center p-3 bg-gradient-to-r from-orange-400 to-rose-500 rounded-lg text-white group transition border border-transparent hover:shadow-md">
+                        <div class="text-white text-xl mr-4 group-hover:scale-110 transition-transform">🔥</div>
+                        <div>
+                            <div class="font-bold flex items-center gap-2">
+                                Desafio Diário
+                                <span class="bg-white text-orange-600 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                                    +@Model.DesafioDiario.XPRecompensa XP
+                                </span>
+                            </div>
+                            <p class="text-xs text-rose-100 opacity-90">@Model.DesafioDiario.Titulo</p>
+                        </div>
+                        <svg class="ml-auto w-5 h-5 text-rose-100 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                }
+                else if (Model.DesafioDiario != null && Model.DesafioDiario.Concluido)
+                {
+                    <div class="flex items-center p-3 bg-white rounded-lg opacity-75 border border-emerald-200">
+                        <div class="text-emerald-500 text-xl mr-4">✅</div>
+                        <div>
+                            <div class="font-bold text-gray-800">Desafio Concluído!</div>
+                            <p class="text-xs text-gray-500">Volte amanhã para um novo desafio.</p>
+                        </div>
+                    </div>
+                }
+
+                <a href="/questoes"
+                    class="flex items-center p-3 bg-white rounded-lg hover:bg-indigo-600 hover:text-white group transition border border-indigo-200">
+                    <div class="text-indigo-600 text-xl mr-4 group-hover:text-amber-300">🎯</div>
+                    <div>
+                        <div class="font-semibold text-gray-800 group-hover:text-white">Praticar com questões</div>
+                        <p class="text-xs text-gray-500 group-hover:text-indigo-200">Questões oficiais e inéditas.</p>
+                    </div>
+                    <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+                
+                <a href="/materias"
+                    class="flex items-center p-3 bg-white rounded-lg hover:bg-indigo-600 hover:text-white group transition border border-indigo-200">
+                    <div class="text-indigo-600 text-xl mr-4 group-hover:text-amber-300">📚</div>
+                    <div>
+                        <div class="font-semibold text-gray-800 group-hover:text-white">Ver matérias</div>
+                        <p class="text-xs text-gray-500 group-hover:text-indigo-200">Teoria, pdfs e videoaulas.</p>
+                    </div>
+                    <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+                
+                <a href="/questoes/historico"
+                    class="flex items-center p-3 bg-white rounded-lg hover:bg-indigo-600 hover:text-white group transition border border-indigo-200">
+                    <div class="text-indigo-600 text-xl mr-4 group-hover:text-amber-300">⏱️</div>
+                    <div>
+                        <div class="font-semibold text-gray-800 group-hover:text-white">Meu histórico</div>
+                        <p class="text-xs text-gray-500 group-hover:text-indigo-200">Revise questões anteriores.</p>
+                    </div>
+                    <svg class="ml-auto w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

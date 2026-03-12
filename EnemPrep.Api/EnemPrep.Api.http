@@ -1,0 +1,6 @@
+@EnemPrep.Api_HostAddress = http://localhost:5206
+
+GET {{EnemPrep.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,25 @@
+﻿  Determinando os projetos a serem restaurados...
+  Todos os projetos est├úo atualizados para restaura├º├úo.
+  EnemPrep.Domain -> C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Domain\bin\Debug\net10.0\EnemPrep.Domain.dll
+  EnemPrep.Application -> C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Application\bin\Debug\net10.0\EnemPrep.Application.dll
+  EnemPrep.Infrastructure -> C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Infrastructure\bin\Debug\net10.0\EnemPrep.Infrastructure.dll
+  EnemPrep.Api -> C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Api\bin\Debug\net10.0\EnemPrep.Api.dll
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\GamificacaoApiClient.cs(32,23): error CS0246: O nome do tipo ou do namespace "StreakUsuarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\GamificacaoApiClient.cs(43,23): error CS0246: O nome do tipo ou do namespace "DesafioDiarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\GamificacaoApiClient.cs(58,35): error CS0246: O nome do tipo ou do namespace "ConquistaDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\Interfaces\IGamificacaoApiClient.cs(7,10): error CS0246: O nome do tipo ou do namespace "StreakUsuarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\Interfaces\IGamificacaoApiClient.cs(8,10): error CS0246: O nome do tipo ou do namespace "DesafioDiarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\Interfaces\IGamificacaoApiClient.cs(9,22): error CS0246: O nome do tipo ou do namespace "ConquistaDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+
+FALHA da compila├º├úo.
+
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\GamificacaoApiClient.cs(32,23): error CS0246: O nome do tipo ou do namespace "StreakUsuarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\GamificacaoApiClient.cs(43,23): error CS0246: O nome do tipo ou do namespace "DesafioDiarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\GamificacaoApiClient.cs(58,35): error CS0246: O nome do tipo ou do namespace "ConquistaDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\Interfaces\IGamificacaoApiClient.cs(7,10): error CS0246: O nome do tipo ou do namespace "StreakUsuarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\Interfaces\IGamificacaoApiClient.cs(8,10): error CS0246: O nome do tipo ou do namespace "DesafioDiarioDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\Services\ApiClients\Interfaces\IGamificacaoApiClient.cs(9,22): error CS0246: O nome do tipo ou do namespace "ConquistaDto" n├úo pode ser encontrado (est├í faltando uma diretiva using ou uma refer├¬ncia de assembly?) [C:\Users\mbrag\Downloads\EstudaTUDO\EnemPrep.Web\EnemPrep.Web.csproj]
+    0 Aviso(s)
+    6 Erro(s)
+
+Tempo Decorrido 00:00:01.78

@@ -1,0 +1,101 @@
+@using EnemPrep.Web.Models.Shared
+@model List<TentativaQuestaoViewModel>
+
+@{
+    ViewData["Title"] = "Histórico de Questões";
+    Layout = "_LayoutAluno";
+}
+
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Meu Histórico de Resoluções</h1>
+            <p class="text-gray-600 mt-1">Acompanhe seu desempenho e as questões que já respondeu.</p>
+        </div>
+        <div class="flex space-x-3">
+            <div class="bg-white px-4 py-2 border border-gray-200 rounded-lg shadow-sm">
+                <span class="text-sm text-gray-500">Total</span>
+                <span class="ml-2 font-bold text-indigo-600">@Model.Count</span>
+            </div>
+            <div class="bg-white px-4 py-2 border border-green-200 rounded-lg shadow-sm">
+                <span class="text-sm text-green-600">Acertos</span>
+                <span class="ml-2 font-bold text-green-700">@Model.Count(t => t.Acertou)</span>
+            </div>
+            <div class="bg-white px-4 py-2 border border-red-200 rounded-lg shadow-sm">
+                <span class="text-sm text-red-600">Erros</span>
+                <span class="ml-2 font-bold text-red-700">@Model.Count(t => !t.Acertou)</span>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="bg-white rounded-xl shadow border border-gray-200 p-12 text-center">
+            <div class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-4">
+                <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900">Nenhum histórico encontrado</h3>
+            <p class="mt-2 text-sm text-gray-500 max-w-sm mx-auto">Você ainda não respondeu nenhuma questão. Que tal começar a praticar no seu plano de estudo?</p>
+            <div class="mt-6">
+                <a asp-action="Index" asp-controller="PlanosEstudo" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    Ir para Planos de Estudo
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resultado</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tempo Gasto</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Questão (Resumo)</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var tentativa in Model)
+                        {
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    @tentativa.DataTentativa.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if (tentativa.Acertou)
+                                    {
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Correto
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Incorreto
+                                        </span>
+                                    }
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    @tentativa.TempoGastoSegundos s
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title="@tentativa.Enunciado">
+                                    @tentativa.Enunciado
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a asp-action="Resolver" asp-route-id="@tentativa.QuestaoId" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-50 px-3 py-1 rounded-md hover:bg-indigo-100 transition-colors">
+                                        Rever
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

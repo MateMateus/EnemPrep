@@ -1,0 +1,92 @@
+@model List<EnemPrep.Web.Models.Shared.QuestaoViewModel>
+@{
+    ViewData["Title"] = "Listagem de Questões";
+    Layout = "_LayoutAluno";
+    var assuntoId = ViewBag.AssuntoId;
+    var filtroAtual = ViewBag.FiltroAtual as string ?? "todas";
+    var respondidasIds = ViewBag.RespondidasIds as HashSet<Guid> ?? new HashSet<Guid>();
+}
+
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">Estudando: Questões</h1>
+        <p class="text-gray-600 mt-1">Resolva as questões para fortalecer seu conhecimento.</p>
+    </div>
+    <a href="javascript:history.back()" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+        &larr; Voltar
+    </a>
+</div>
+
+<!-- Tabs de Filtro -->
+<div class="mb-6 border-b border-gray-200">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <a asp-action="ListarPorAssunto" asp-route-assuntoId="@assuntoId" asp-route-filtro="todas"
+           class="@(filtroAtual == "todas" ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300") whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            Todas
+        </a>
+        <a asp-action="ListarPorAssunto" asp-route-assuntoId="@assuntoId" asp-route-filtro="nao-respondidas"
+           class="@(filtroAtual == "nao-respondidas" ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300") whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            Não Respondidas
+        </a>
+        <a asp-action="ListarPorAssunto" asp-route-assuntoId="@assuntoId" asp-route-filtro="respondidas"
+           class="@(filtroAtual == "respondidas" ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300") whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+            Respondidas
+        </a>
+    </nav>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center text-gray-500">
+        <div class="text-4xl mb-3">📭</div>
+        <p class="text-lg font-medium text-gray-700">Nenhuma questão encontrada</p>
+        <p class="text-sm mt-1">Ainda não há questões para este filtro específico.</p>
+    </div>
+}
+else
+{
+    <div class="space-y-6">
+        @foreach (var questao in Model)
+        {
+            var jaRespondida = respondidasIds.Contains(questao.Id);
+            <div class="bg-white rounded-xl shadow border border-gray-200 p-6 relative">
+                @if (jaRespondida)
+                {
+                    <div class="absolute top-0 right-0 mt-4 mr-4 bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-md">
+                        ✔ Respondida
+                    </div>
+                }
+
+                <!-- Dados da Questão -->
+                <div class="flex justify-between items-start mb-4 pr-24">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Nível: @questao.Dificuldade
+                    </span>
+                    <span class="text-xs text-gray-400">ID: @questao.Id.ToString().Substring(0, 8)</span>
+                </div>
+
+                <h3 class="text-lg font-medium text-gray-900 mb-6">@questao.Enunciado</h3>
+
+                <div class="space-y-3">
+                    @foreach (var alt in questao.Alternativas)
+                    {
+                        <div class="relative flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="alt_@alt.Id" name="questao_@questao.Id" type="radio" disabled class="focus:ring-indigo-500 h-4 w-4 text-gray-400 border-gray-300">
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="alt_@alt.Id" class="font-medium text-gray-500">@alt.Texto</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-100 text-right">
+                    <a asp-action="Resolver" asp-controller="Questoes" asp-route-id="@questao.Id" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white @(jaRespondida ? "bg-gray-600 hover:bg-gray-700" : "bg-indigo-600 hover:bg-indigo-700")">
+                        @(jaRespondida ? "Revisar Questão" : "Resolver Questão")
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,80 @@
+@model List<EnemPrep.Web.Models.Shared.MateriaComAssuntosViewModel>
+@{
+    ViewData["Title"] = "Escolha de Matéria - Questões";
+    Layout = "_LayoutAluno";
+}
+
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">🎯 Resolver Questões</h1>
+    <p class="text-gray-600 mt-1">Escolha uma matéria para praticar e testar seus conhecimentos.</p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center text-gray-500">
+        <p class="text-lg font-medium text-gray-700">Nenhuma matéria disponível</p>
+    </div>
+}
+else
+{
+    <div class="space-y-6">
+        @foreach (var materia in Model)
+        {
+            <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleAssuntos('@materia.Id')">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📚</span> @materia.Nome
+                        </h2>
+                        @if (!string.IsNullOrEmpty(materia.Descricao))
+                        {
+                            <p class="text-sm text-gray-500 mt-1">@materia.Descricao</p>
+                        }
+                    </div>
+                    <span class="text-gray-400">
+                        <svg class="w-6 h-6 transform transition-transform" id="icon-@materia.Id" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </span>
+                </div>
+                
+                <div id="assuntos-@materia.Id" class="hidden">
+                    <ul class="divide-y divide-gray-100">
+                        @if (!materia.Assuntos.Any())
+                        {
+                            <li class="p-4 text-center text-gray-500 text-sm">Nenhum assunto cadastrado</li>
+                        }
+                        else
+                        {
+                            @foreach (var assunto in materia.Assuntos)
+                            {
+                                <li class="p-4 hover:bg-indigo-50 transition-colors flex justify-between items-center group">
+                                    <span class="text-gray-800 font-medium group-hover:text-indigo-700">@assunto.Nome</span>
+                                    <a asp-action="ListarPorAssunto" asp-route-assuntoId="@assunto.Id" 
+                                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                                        Resolver ✨
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function toggleAssuntos(id) {
+            const content = document.getElementById('assuntos-' + id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
+}

@@ -1,0 +1,70 @@
+@model List<EnemPrep.Web.Models.Shared.AssuntoViewModel>
+
+@{
+    ViewData["Title"] = $"Assuntos — {ViewBag.MateriaNome}";
+    Guid materiaId = ViewBag.MateriaId;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a asp-area="Admin" asp-controller="Materias" asp-action="Index"
+           class="text-muted text-decoration-none small">← Matérias</a>
+        <h1 class="h3 mb-0 mt-1">📖 @ViewBag.MateriaNome — Assuntos</h1>
+    </div>
+    <a asp-action="Criar" asp-route-materiaId="@materiaId"
+       class="btn btn-primary">+ Novo Assunto</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhum assunto cadastrado para esta matéria.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Assunto</th>
+                    <th class="text-center">Conteúdos</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assunto in Model)
+                {
+                    <tr>
+                        <td class="fw-medium">@assunto.Nome</td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a asp-area="Admin" asp-controller="Questoes" asp-action="Index"
+                                   asp-route-assuntoId="@assunto.Id"
+                                   class="btn btn-outline-primary" title="Gerenciar Questões">❓ Questões</a>
+                                <a asp-area="Admin" asp-controller="VideoAulas" asp-action="Index"
+                                   asp-route-assuntoId="@assunto.Id"
+                                   class="btn btn-outline-primary" title="Gerenciar Videoaulas">🎬 Videoaulas</a>
+                                <a asp-area="Admin" asp-controller="Materiais" asp-action="Index"
+                                   asp-route-assuntoId="@assunto.Id"
+                                   class="btn btn-outline-primary" title="Gerenciar Materiais">📄 Materiais</a>
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a asp-action="Editar" asp-route-id="@assunto.Id"
+                                   asp-route-materiaId="@materiaId"
+                                   class="btn btn-sm btn-outline-secondary">Editar</a>
+                                <form asp-action="Deletar" method="post"
+                                      onsubmit="return confirm('Remover assunto?')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@assunto.Id" />
+                                    <input type="hidden" name="materiaId" value="@materiaId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Remover</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

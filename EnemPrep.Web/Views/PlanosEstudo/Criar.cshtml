@@ -1,0 +1,198 @@
+@model EnemPrep.Web.Models.PlanosEstudo.CriarPlanoEstudoViewModel
+
+@{
+    ViewData["Title"] = "Criar Novo Plano";
+    Layout = "_StudentLayout";
+}
+
+<div class="max-w-4xl mx-auto py-8">
+    <div class="md:flex md:items-center md:justify-between mb-8">
+        <div class="min-w-0 flex-1">
+            <h2
+                class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:truncate sm:text-3xl sm:tracking-tight">
+                Montar Cronograma
+            </h2>
+        </div>
+        <div class="mt-4 flex md:ml-4 md:mt-0">
+            <a asp-action="Index"
+                class="inline-flex items-center rounded-md bg-white dark:bg-slate-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700">
+                Voltar
+            </a>
+        </div>
+    </div>
+
+    <form asp-action="Criar" method="post" class="space-y-8 divide-y divide-gray-200 dark:divide-slate-700">
+
+        <div asp-validation-summary="ModelOnly" class="bg-red-50 border-l-4 border-red-400 p-4 mb-4"></div>
+
+        <div class="bg-white dark:bg-slate-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+            <div class="px-4 py-6 sm:p-8">
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+                    <div class="sm:col-span-6">
+                        <label asp-for="Titulo"
+                            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+                            Nome do Plano (Ex: Sprint Final Matemática)
+                        </label>
+                        <div class="mt-2">
+                            <input asp-for="Titulo"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-slate-900 dark:text-white dark:ring-slate-700">
+                        </div>
+                        <span asp-validation-for="Titulo" class="text-red-500 text-xs"></span>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label asp-for="DataInicio"
+                            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+                            Data de Início
+                        </label>
+                        <div class="mt-2">
+                            <input asp-for="DataInicio"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-slate-900 dark:text-white dark:ring-slate-700">
+                        </div>
+                        <span asp-validation-for="DataInicio" class="text-red-500 text-xs"></span>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label asp-for="DataFim"
+                            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">
+                            Data Prevista de Fim
+                        </label>
+                        <div class="mt-2">
+                            <input asp-for="DataFim"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-slate-900 dark:text-white dark:ring-slate-700">
+                        </div>
+                        <span asp-validation-for="DataFim" class="text-red-500 text-xs"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-8">
+            <div>
+                <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">Alocar Assuntos</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Selecione quais assuntos você deseja focar e defina para qual dia. O MVP suporta alocação simples
+                    manual.
+                </p>
+            </div>
+
+            <div class="mt-6 space-y-6">
+                <!-- Alpine component to manage the dynamic list -->
+                <div x-data="planoBuilder()">
+
+                    <div class="flex gap-4 mb-6 items-end">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Escolha o
+                                Assunto</label>
+                            <select x-model="novoAssuntoId"
+                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-700 dark:bg-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <option value="">-- Selecione --</option>
+                                @foreach (var materia in Model.MateriasDisponiveis)
+                                {
+                                    <optgroup label="@materia.Nome">
+                                        @foreach (var assunto in materia.Assuntos)
+                                        {
+                                            <option value="@assunto.Id">@assunto.Nome</option>
+                                        }
+                                    </optgroup>
+                                }
+                            </select>
+                        </div>
+                        <div class="w-48">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Para
+                                quando?</label>
+                            <input x-model="novaData" type="date"
+                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-700 dark:bg-slate-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
+                        </div>
+                        <button type="button" @@click="adicionarItem()"
+                            class="mb-0.5 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+                            Adicionar à Lista
+                        </button>
+                    </div>
+
+                    <!-- Lista de Itens Adicionados -->
+                    <div class="bg-white dark:bg-slate-800 shadow overflow-hidden sm:rounded-md">
+                        <ul role="list" class="divide-y divide-gray-200 dark:divide-slate-700">
+                            <template x-for="(item, index) in itens" :key="index">
+                                <li class="px-4 py-4 flex items-center justify-between sm:px-6">
+                                    <div class="flex gap-4 items-center">
+                                        <div class="text-sm font-medium text-indigo-600 dark:text-indigo-400 truncate"
+                                            x-text="obterNomeAssunto(item.assuntoId)"></div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400"
+                                            x-text="formatarData(item.data)"></div>
+                                    </div>
+                                    <button type="button" @@click="removerItem(index)"
+                                        class="text-red-500 hover:text-red-700 text-sm font-medium">
+                                        Remover
+                                    </button>
+
+                                    <!-- Hidden inputs para o Model Binder do ASP.NET -->
+                                    <input type="hidden" :name="`ItensSelecionados[${index}].AssuntoId`"
+                                        :value="item.assuntoId" />
+                                    <input type="hidden" :name="`ItensSelecionados[${index}].DataPrevista`"
+                                        :value="item.data" />
+                                </li>
+                            </template>
+                            <li x-show="itens.length === 0"
+                                class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                Nenhum assunto adicionado ao plano ainda.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-5 pb-8 flex justify-end">
+            <button type="submit"
+                class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-6 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Salvar Meu Cronograma
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('planoBuilder', () => ({
+                itens: [],
+                novoAssuntoId: '',
+                novaData: '',
+
+                adicionarItem() {
+                    if (!this.novoAssuntoId || !this.novaData) {
+                        alert('Selecione um assunto e uma data previstos antes de adicionar.');
+                        return;
+                    }
+
+                    this.itens.push({
+                        assuntoId: this.novoAssuntoId,
+                        data: this.novaData
+                    });
+
+                    // reset para próximo
+                    this.novoAssuntoId = '';
+                },
+
+                removerItem(index) {
+                    this.itens.splice(index, 1);
+                },
+
+                obterNomeAssunto(id) {
+                    const select = document.querySelector('select[x-model="novoAssuntoId"]');
+                    const option = select.querySelector(`option[value="${id}"]`);
+                    return option ? option.text : 'Desconhecido';
+                },
+
+                formatarData(dtStr) {
+                    if (!dtStr) return '';
+                    const parts = dtStr.split('-');
+                    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+                }
+            }))
+        })
+    </script>
+}

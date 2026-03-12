@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EnemPrep (Área do Aluno)</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- Tailwind CSS (via CDN temporário para a estrutura inicial, sem quebrar o projeto existente) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        .htmx-indicator {
+            display: none;
+        }
+
+        .htmx-request .htmx-indicator {
+            display: flex;
+        }
+
+        .htmx-request.htmx-indicator {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 antialiased font-sans flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-indigo-700 text-white flex flex-col hidden md:flex">
+        <div class="h-16 flex items-center justify-center border-b border-indigo-800 font-bold text-xl tracking-wider">
+            EnemPrep
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="/dashboard" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">📊
+                Dashboard</a>
+            <a href="/cronograma" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">📅
+                Cronograma</a>
+            <a href="/materias" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">📚 Matérias</a>
+            <a href="/questoes" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">🎯 Questões</a>
+            <a href="/questoes/historico" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">⏱️
+                Histórico</a>
+            <a href="/conquistas" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">🏅
+                Conquistas</a>
+            <a href="/perfil" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">👤 Meu Perfil</a>
+            @if (Context.Session.GetString("TipoPerfil") == "Administrador")
+            {
+                <div class="mt-4 pt-4 border-t border-indigo-500">
+                    <a href="/admin/materias" class="block px-3 py-2 rounded-md bg-indigo-800 hover:bg-indigo-900 text-yellow-300 font-bold transition-colors">⚙️ Painel de Admin</a>
+                </div>
+            }
+        </nav>
+        <div class="p-4 border-t border-indigo-800">
+            <a href="/auth/logout"
+                class="block text-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-700 bg-white hover:bg-indigo-50">Sair</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        <!-- Top Header -->
+        <header class="h-16 bg-white shadow flex items-center justify-between px-6 z-10">
+            <div class="text-xl font-semibold text-gray-800">@ViewData["Title"]</div>
+            <div class="flex items-center space-x-4">
+                @{
+                    var nomeUsuario = Context.Session.GetString("NomeUsuario") ?? "Olá, Visitante";
+                }
+                <span class="text-sm text-gray-600 font-medium">@nomeUsuario</span>
+            </div>
+        </header>
+
+        <!-- Main Body -->
+        <main class="flex-1 overflow-auto bg-gray-50 p-6">
+            @if (TempData["Erro"] != null)
+            {
+                <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                    <span class="text-red-500 text-xl">⚠️</span>
+                    <div>
+                        <p class="text-sm font-medium text-red-800">@TempData["Erro"]</p>
+                    </div>
+                </div>
+            }
+            @if (TempData["Sucesso"] != null)
+            {
+                <div class="mb-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+                    <span class="text-green-500 text-xl">✅</span>
+                    <div>
+                        <p class="text-sm font-medium text-green-800">@TempData["Sucesso"]</p>
+                    </div>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Global HTMX Indicator -->
+    <div id="global-loader" class="htmx-indicator fixed inset-0 bg-gray-900 bg-opacity-50 z-50 items-center justify-center pointer-events-none">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+    </div>
+    <script>
+        document.body.addEventListener('htmx:configRequest', function() {
+            document.body.classList.add('htmx-request');
+        });
+        document.body.addEventListener('htmx:afterRequest', function() {
+            document.body.classList.remove('htmx-request');
+        });
+    </script>
+</body>
+
+</html>

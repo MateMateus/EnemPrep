@@ -1,0 +1,91 @@
+@model CriarQuestaoViewModel
+
+@{
+    ViewData["Title"] = "Nova Questão";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-4">Nova Questão — @Model.AssuntoNome</h2>
+
+                <form asp-action="Criar" method="post" id="formQuestao">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="AssuntoId" />
+                    <input type="hidden" asp-for="AssuntoNome" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Enunciado" class="form-label fw-semibold">Enunciado *</label>
+                        <textarea asp-for="Enunciado" class="form-control" rows="4"
+                                  placeholder="Digite o enunciado da questão..."></textarea>
+                        <span asp-validation-for="Enunciado" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Dificuldade" class="form-label fw-semibold">Dificuldade *</label>
+                        <select asp-for="Dificuldade" class="form-select">
+                            <option value="Facil">Fácil</option>
+                            <option value="Medio" selected>Médio</option>
+                            <option value="Dificil">Difícil</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Explicacao" class="form-label fw-semibold">Explicação da resposta</label>
+                        <textarea asp-for="Explicacao" class="form-control" rows="2"
+                                  placeholder="Opcional: explique por que a alternativa correta é correta"></textarea>
+                    </div>
+
+                    <h5 class="mb-3">Alternativas <small class="text-muted fw-normal">(marque apenas 1 como correta)</small></h5>
+
+                    @for (int i = 0; i < Model.Alternativas.Count; i++)
+                    {
+                            <div class="card mb-2 border-0 bg-light">
+                                <div class="card-body py-2 px-3 d-flex gap-3 align-items-start">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="radio" name="alternativaCorreta" value="@i"
+                                    @(Model.Alternativas[i].IsCorreta ? "checked" : "")
+                                               onchange="marcarCorreta(@i)" id="correta_@i" />
+                                        <input type="hidden" name="Alternativas[@i].IsCorreta"
+                                               id="isCorreta_@i" value="@Model.Alternativas[i].IsCorreta.ToString().ToLower()" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label fw-medium mb-1" for="correta_@i">
+                                            Alternativa @((char)('A' + i))
+                                            <span class="badge bg-success ms-1" id="badge_@i"
+                                                  style="display:@(Model.Alternativas[i].IsCorreta ? "inline" : "none")">Correta</span>
+                                        </label>
+                                        <input type="text" name="Alternativas[@i].Texto"
+                                               value="@Model.Alternativas[i].Texto"
+                                               class="form-control form-control-sm"
+                                               placeholder="Texto da alternativa @((char)('A' + i))" />
+                                    </div>
+                                </div>
+                            </div>
+                    }
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Criar Questão</button>
+                        <a asp-action="Index" asp-route-assuntoId="@Model.AssuntoId"
+                           class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            function marcarCorreta(index) {
+                const total = @Model.Alternativas.Count;
+                for (let i = 0; i < total; i++) {
+                    document.getElementById('isCorreta_' + i).value = (i === index).toString().toLowerCase();
+                    document.getElementById('badge_' + i).style.display = (i === index) ? 'inline' : 'none';
+                }
+            }
+        </script>
+}

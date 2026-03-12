@@ -1,0 +1,219 @@
+@using EnemPrep.Web.Models.Shared
+@model QuestaoViewModel
+
+@{
+    ViewData["Title"] = "Resolver Questão";
+    Layout = "_LayoutAluno";
+}
+
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Questão Selecionada</h1>
+            <p class="text-gray-600 mt-1">Nível de Dificuldade: @Model.Dificuldade</p>
+        </div>
+        <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
+            class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+            &larr; Voltar para a lista
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+        <div class="p-6 md:p-8">
+            <h3 class="text-xl font-medium text-gray-900 mb-8 whitespace-pre-wrap">@Model.Enunciado</h3>
+
+            <form id="form-responder">
+                <div class="space-y-4">
+                    @foreach (var alternativa in Model.Alternativas)
+                    {
+                        <div class="alternativa-opcao relative block cursor-pointer border border-gray-300 rounded-lg p-4 hover:border-indigo-500 hover:bg-indigo-50 transition-colors"
+                            onclick="selecionarAlternativa('@alternativa.Id')">
+                            <div class="flex items-center">
+                                <input id="alt_@alternativa.Id" name="AlternativaId" value="@alternativa.Id" type="radio"
+                                    class="focus:ring-indigo-500 h-5 w-5 text-indigo-600 border-gray-300 cursor-pointer"
+                                    style="display: none;" required>
+                                <label for="alt_@alternativa.Id"
+                                    class="ml-3 font-medium text-gray-700 cursor-pointer w-full"
+                                    style="pointer-events: none;">
+                                    @alternativa.Texto
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                    <button type="submit" id="btn-responder"
+                        class="inline-flex items-center justify-center py-2.5 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        Confirmar Resposta
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultado-container" class="mt-8 hidden">
+                <div id="alert-resultado" class="rounded-md p-4 mb-6"></div>
+
+                <div id="explicacao-container" class="bg-blue-50 border border-blue-200 rounded-lg p-6 hidden">
+                    <h4 class="text-lg font-medium text-blue-900 mb-2">Explicação do Professor</h4>
+                    <p id="explicacao-texto" class="text-blue-800 whitespace-pre-wrap">@Model.Explicacao</p>
+                </div>
+
+                <div class="mt-6 flex justify-between">
+                    <a asp-action="Historico" asp-controller="Questoes"
+                        class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                        Ver meu histórico
+                    </a>
+                    <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
+                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        Próxima Questão
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let tempoInicio = Date.now();
+
+        function selecionarAlternativa(id) {
+            // Remover classes de seleção visual
+            document.querySelectorAll('.alternativa-opcao').forEach(el => {
+                el.classList.remove('border-indigo-500', 'bg-indigo-50', 'ring-1', 'ring-indigo-500');
+            });
+
+            const radio = document.getElementById('alt_' + id);
+            radio.checked = true;
+
+            // Adicionar classes visuais à opção selecionada
+            const container = radio.closest('.alternativa-opcao');
+            container.classList.add('border-indigo-500', 'bg-indigo-50', 'ring-1', 'ring-indigo-500');
+        }
+
+        document.getElementById('form-responder').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btn-responder');
+            btn.disabled = true;
+            btn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processando...`;
+
+            const formData = new FormData(e.target);
+            const alternativaId = formData.get('AlternativaId');
+
+            if (!alternativaId) {
+                alert("Selecione uma alternativa antes de confirmar.");
+                btn.disabled = false;
+                btn.innerHTML = 'Confirmar Resposta';
+                return;
+            }
+
+            const tempoGasto = Math.floor((Date.now() - tempoInicio) / 1000);
+
+            try {
+                const response = await fetch('/Questoes/Responder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        QuestaoId: '@Model.Id',
+                        AlternativaId: alternativaId,
+                        TempoGasto: tempoGasto
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    const alertDiv = document.getElementById('alert-resultado');
+                    const resultadoContainer = document.getElementById('resultado-container');
+
+                    if (data.acertou) {
+                        alertDiv.className = 'rounded-md bg-green-50 p-4 border border-green-200 shadow-sm';
+                        alertDiv.innerHTML = `
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-lg font-bold text-green-800">Resposta Correta!</h3>
+                                        <div class="mt-2 text-sm text-green-700">
+                                            <p>Mandou bem! Continue com esse ritmo excelente.</p>
+                                            <div class="mt-2 inline-flex items-center space-x-2 bg-green-100 px-3 py-1 rounded-full border border-green-300">
+                                                <span>🔥</span>
+                                                <span class="font-bold text-green-800">Streak mantido! + XP Garantido</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+
+                        // Marca visual a correta onde o usuário clicou
+                        const selectedContainer = document.getElementById('alt_' + alternativaId).closest('.alternativa-opcao');
+                        selectedContainer.classList.remove('border-indigo-500', 'bg-indigo-50', 'ring-indigo-500');
+                        selectedContainer.classList.add('border-green-500', 'bg-green-50', 'ring-1', 'ring-green-500');
+                    } else {
+                        alertDiv.className = 'rounded-md bg-red-50 p-4 border border-red-200 shadow-sm';
+                        alertDiv.innerHTML = `
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-lg font-medium text-red-800">Resposta Incorreta</h3>
+                                        <div class="mt-2 text-sm text-red-700">
+                                            <p>Não foi dessa vez. Reveja o conteúdo e leia a explicação abaixo.</p>
+                                        </div>
+                                    </div>
+                                </div>`;
+
+                        // Marca a incorreta selecionada
+                        const selectedContainer = document.getElementById('alt_' + alternativaId).closest('.alternativa-opcao');
+                        selectedContainer.classList.remove('border-indigo-500', 'bg-indigo-50', 'ring-indigo-500');
+                        selectedContainer.classList.add('border-red-500', 'bg-red-50', 'ring-1', 'ring-red-500');
+
+                        // Marca a correta na tela
+                        if (data.alternativaCorretaId) {
+                            const corretaContainer = document.getElementById('alt_' + data.alternativaCorretaId).closest('.alternativa-opcao');
+                            if (corretaContainer) {
+                                corretaContainer.classList.add('border-green-500', 'bg-green-50', 'ring-2', 'ring-green-500');
+                            }
+                        }
+                    }
+
+                    // Tira a funcionalidade de clicar nas alternativas
+                    document.querySelectorAll('.alternativa-opcao').forEach(el => {
+                        el.onclick = null;
+                        el.style.cursor = 'default';
+                        const label = el.querySelector('label');
+                        if (label) label.style.pointerEvents = 'none';
+                    });
+
+                    if (data.explicacao) {
+                        document.getElementById('explicacao-container').classList.remove('hidden');
+                    }
+
+                    resultadoContainer.classList.remove('hidden');
+                    document.getElementById('form-responder').style.display = 'none';
+
+                } else {
+                    alert('Erro ao registrar resposta.');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Confirmar Resposta';
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Erro ao processar a requisição.');
+                btn.disabled = false;
+                btn.innerHTML = 'Confirmar Resposta';
+            }
+        });
+    </script>
+}

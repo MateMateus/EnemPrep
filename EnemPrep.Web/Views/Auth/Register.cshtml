@@ -1,0 +1,56 @@
+@model EnemPrep.Web.Models.Auth.RegisterViewModel
+@{
+    ViewData["Title"] = "Criar Conta - EnemPrep";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4">Nova Conta EnemPrep</h3>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Nome" class="control-label mb-1">Nome Completo</label>
+                        <input asp-for="Nome" class="form-control" placeholder="Seu nome" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="control-label mb-1">E-mail</label>
+                        <input asp-for="Email" class="form-control" placeholder="Seu melhor email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Senha" class="control-label mb-1">Crie uma Senha</label>
+                        <input asp-for="Senha" class="form-control" placeholder="No mínimo 6 caracteres" />
+                        <span asp-validation-for="Senha" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="ConfirmarSenha" class="control-label mb-1">Confirme a Senha</label>
+                        <input asp-for="ConfirmarSenha" class="form-control" placeholder="Repita a senha" />
+                        <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Criar Conta e Entrar</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">Já tem uma conta?</p>
+                    <a asp-action="Login" asp-controller="Auth" class="btn btn-link">Fazer Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,54 @@
+@model EnemPrep.Web.Models.Shared.MateriaComAssuntosViewModel
+@{
+    ViewData["Title"] = $"Matéria: {Model.Nome}";
+    Layout = "_LayoutAluno";
+}
+
+<div class="mb-6 flex items-center">
+    <a asp-action="Index" class="mr-4 text-gray-500 hover:text-indigo-600 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+        </svg>
+    </a>
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">@Model.Nome</h1>
+        <p class="text-gray-600 mt-1">@Model.Descricao</p>
+    </div>
+</div>
+
+<h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Assuntos Disponíveis</h2>
+
+@if (!Model.Assuntos.Any())
+{
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center text-gray-500">
+        Nenhum assunto cadastrado para esta matéria ainda.
+    </div>
+}
+else
+{
+    <div class="space-y-4">
+        @foreach (var assunto in Model.Assuntos)
+        {
+            <div class="bg-white rounded-lg border border-gray-200 p-5 shadow-sm hover:shadow-md transition">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <h3 class="text-lg font-medium text-gray-900">@assunto.Nome</h3>
+                    <div class="flex space-x-2">
+                        <a asp-controller="VideoAulas" asp-action="ListarPorAssunto" asp-route-assuntoId="@assunto.Id"
+                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                            📺 Aulas
+                        </a>
+                        <a asp-controller="Materiais" asp-action="ListarPorAssunto" asp-route-assuntoId="@assunto.Id"
+                            class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            📄 Materiais
+                        </a>
+                        <a asp-controller="Questoes" asp-action="ListarPorAssunto" asp-route-assuntoId="@assunto.Id"
+                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200">
+                            🎯 Questões
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
