@@ -16,7 +16,7 @@ public class RespostaSimuladoConfiguration : IEntityTypeConfiguration<RespostaSi
             .IsRequired();
 
         builder.Property(rs => rs.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Pode ser nulo se passou em branco
         builder.Property(rs => rs.AlternativaId)

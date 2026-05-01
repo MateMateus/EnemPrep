@@ -2,6 +2,7 @@ using EnemPrep.Api.Extensions;
 using EnemPrep.Application.Common;
 using EnemPrep.Application.DTOs.Simulados;
 using EnemPrep.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Api.Controllers;
@@ -36,6 +37,7 @@ public class SimuladosController : ControllerBase
         return Ok(ApiResponse<SimuladoDetalheDto>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpPost("iniciar")]
     public async Task<IActionResult> Iniciar([FromHeader(Name = "X-Usuario-Id")] Guid usuarioId, [FromBody] IniciarSimuladoDto request, CancellationToken cancellationToken)
     {
@@ -47,6 +49,7 @@ public class SimuladosController : ControllerBase
         return Ok(ApiResponse<TentativaSimuladoResultDto>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpPost("tentativas/{tentativaId:guid}/submeter")]
     public async Task<IActionResult> Submeter([FromHeader(Name = "X-Usuario-Id")] Guid usuarioId, Guid tentativaId, [FromBody] SubmeterSimuladoDto request, CancellationToken cancellationToken)
     {
@@ -58,6 +61,7 @@ public class SimuladosController : ControllerBase
         return Ok(ApiResponse<TentativaSimuladoResultDto>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpGet("historico")]
     public async Task<IActionResult> GetHistorico([FromHeader(Name = "X-Usuario-Id")] Guid usuarioId, CancellationToken cancellationToken)
     {

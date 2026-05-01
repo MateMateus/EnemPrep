@@ -1,3 +1,4 @@
+using EnemPrep.Web.Filters;
 using EnemPrep.Web.Models.Simulados;
 using EnemPrep.Web.Services.ApiClients.Interfaces;
 using EnemPrep.Web.ViewModels.Simulados;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Web.Controllers;
 
+[VerificaSessaoAluno]
 [Route("[controller]")]
 public class SimuladosController : Controller
 {

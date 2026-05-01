@@ -24,6 +24,6 @@ public class VideoAulaConfiguration : IEntityTypeConfiguration<VideoAula>
             .IsRequired();
 
         builder.Property(v => v.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

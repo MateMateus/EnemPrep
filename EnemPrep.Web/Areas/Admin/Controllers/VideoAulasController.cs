@@ -1,10 +1,12 @@
 using EnemPrep.Web.ApiClients;
 using EnemPrep.Web.Areas.Admin.ViewModels.VideoAulas;
+using EnemPrep.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[VerificaSessaoAdmin]
 public class VideoAulasController(IVideoAulaApiClient videoAulaClient, ILogger<VideoAulasController> logger) : Controller
 {
     public async Task<IActionResult> Index(Guid assuntoId, CancellationToken ct)
@@ -20,7 +22,7 @@ public class VideoAulasController(IVideoAulaApiClient videoAulaClient, ILogger<V
         
         try
         {
-            var videoaulas = await videoAulaClient.GetByAssuntoAsync(assuntoId, ct);
+            var videoaulas = await videoAulaClient.GetByAssuntoAsync(assuntoId, 1, 100, ct);
             return View(videoaulas);
         }
         catch (Exception ex)

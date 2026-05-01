@@ -22,7 +22,7 @@ public class PerfilUsuarioConfiguration : IEntityTypeConfiguration<PerfilUsuario
             .HasMaxLength(100);
 
         builder.Property(p => p.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Navigation(p => p.Usuarios).HasField("_usuarios");
     }

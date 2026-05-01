@@ -47,7 +47,8 @@ else
                         </td>
                         <td>@q.TotalAlternativas</td>
                         <td class="text-end">
-                            <form asp-action="Deletar" method="post" onsubmit="return confirm('Remover questão?')">
+                            <form asp-action="Deletar" method="post" onsubmit="return confirm('Remover questão?')" class="d-flex justify-content-end gap-2">
+                                <a asp-action="Editar" asp-route-id="@q.Id" asp-route-assuntoId="@assuntoId" class="btn btn-sm btn-outline-primary">Editar</a>
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@q.Id" />
                                 <input type="hidden" name="assuntoId" value="@assuntoId" />

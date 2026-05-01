@@ -16,9 +16,9 @@
     <p class="text-gray-600 mt-1">Aqui está o resumo do seu progresso na plataforma acompanhando o seu ritmo de estudos.</p>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
     <!-- Streak -->
-    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-orange-500">
+    <div class="bg-white rounded-xl shadow p-4 sm:p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
         <p class="text-sm font-medium text-gray-500 mb-1">🔥 Streak atual</p>
         <div class="flex items-baseline space-x-2">
             <h2 class="text-3xl font-bold text-gray-900">@Model.StreakAtual</h2>
@@ -31,7 +31,7 @@
     </div>
 
     <!-- Taxa de Acerto -->
-    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-indigo-500">
+    <div class="bg-white rounded-xl shadow p-4 sm:p-6 border-l-4 border-indigo-500 hover:shadow-lg transition-shadow">
         <p class="text-sm font-medium text-gray-500 mb-1">🎯 Taxa de Acerto Geral</p>
         <div class="flex items-baseline space-x-2">
             <h2 class="text-3xl font-bold text-gray-900">@Model.PercentualAcerto%</h2>
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Acertos -->
-    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-emerald-500">
+    <div class="bg-white rounded-xl shadow p-4 sm:p-6 border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
         <p class="text-sm font-medium text-gray-500 mb-1">✅ Questões Corretas</p>
         <div class="flex items-baseline space-x-2">
             <h2 class="text-3xl font-bold text-gray-900 text-emerald-600">@Model.TotalAcertos</h2>
@@ -49,7 +49,7 @@
     </div>
 
     <!-- Erros -->
-    <div class="bg-white rounded-xl shadow p-6 border-l-4 border-red-500">
+    <div class="bg-white rounded-xl shadow p-4 sm:p-6 border-l-4 border-red-500 hover:shadow-lg transition-shadow">
         <p class="text-sm font-medium text-gray-500 mb-1">❌ Questões Incorretas</p>
         <div class="flex items-baseline space-x-2">
             <h2 class="text-3xl font-bold text-gray-900 text-red-600">@Model.TotalErros</h2>
@@ -58,10 +58,10 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
     <div class="lg:col-span-2 space-y-6">
         <!-- Progresso por Matéria -->
-        <div class="bg-white rounded-xl shadow p-6 border border-gray-100">
+        <div class="bg-white rounded-xl shadow p-4 sm:p-6 border border-gray-100">
             <h3 class="text-xl font-bold text-gray-900 mb-6">Seu Progresso por Matéria</h3>
             
             @if (Model.QuestoesPorMateria.Any())
@@ -102,7 +102,7 @@
 
     <!-- Quick Actions -->
     <div class="space-y-6">
-        <div class="bg-indigo-50 rounded-xl shadow-sm p-6 border border-indigo-100">
+        <div class="bg-indigo-50 rounded-xl shadow-sm p-4 sm:p-6 border border-indigo-100">
             <h3 class="text-lg font-bold text-indigo-900 mb-4">O que estudar agora?</h3>
             <div class="space-y-3">
                 @if (Model.DesafioDiario != null && !Model.DesafioDiario.Concluido)

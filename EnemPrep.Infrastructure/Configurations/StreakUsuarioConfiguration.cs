@@ -25,6 +25,6 @@ public class StreakUsuarioConfiguration : IEntityTypeConfiguration<StreakUsuario
             .IsRequired();
 
         builder.Property(s => s.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

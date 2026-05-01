@@ -17,7 +17,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        _logger.LogError(exception, "Erro não tratado: {Message}", exception.Message);
+        _logger.LogError(exception, "Ocorreu um erro não tratado do tipo: {ExceptionType}", exception.GetType().Name);
 
         var statusCode = exception switch
         {

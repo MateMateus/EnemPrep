@@ -20,6 +20,6 @@ public class AlternativaConfiguration : IEntityTypeConfiguration<Alternativa>
             .IsRequired();
 
         builder.Property(a => a.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

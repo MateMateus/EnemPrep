@@ -1,0 +1,401 @@
+@model EnemPrep.Web.Models.Shared.VideoAulaViewModel
+@{
+    ViewData["Title"] = Model.Titulo;
+    Layout = "_LayoutAluno";
+}
+
+@{
+    // Extrai o ID do YouTube da URL
+    var videoId = "";
+    var url = Model.UrlVideo ?? "";
+    if (url.Contains("youtu.be/"))
+    {
+        videoId = url.Split("youtu.be/").Last().Split("?").First().Split("&").First();
+    }
+    else if (url.Contains("v="))
+    {
+        videoId = url.Split("v=").Last().Split("&").First();
+    }
+    else if (url.Contains("embed/"))
+    {
+        videoId = url.Split("embed/").Last().Split("?").First();
+    }
+}
+
+<div class="max-w-5xl mx-auto" x-data="videoPlayer()">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
+               class="text-sm text-indigo-600 hover:text-indigo-800 font-medium mb-2 inline-block">
+                &larr; Voltar às videoaulas
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">@Model.Titulo</h1>
+            <p class="text-sm text-gray-500 mt-1">Duração: @Model.DuracaoFormatada</p>
+        </div>
+    </div>
+
+    @if (string.IsNullOrEmpty(videoId))
+    {
+        <!-- Vídeo não-YouTube: link externo -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+            <div class="bg-gray-900 aspect-video flex flex-col items-center justify-center text-white">
+                <svg class="w-20 h-20 mb-4 opacity-60" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                </svg>
+                <p class="text-lg font-medium mb-4">Este vídeo é de uma plataforma externa</p>
+                <a href="@Model.UrlVideo" target="_blank" rel="noopener"
+                   class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                    Abrir Vídeo ↗
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- YouTube Player -->
+        <!-- YouTube Player -->
+        <div id="fullscreen-wrapper" class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 flex flex-col">
+            <!-- Player Container -->
+            <div class="relative bg-black" :class="isFullscreen ? 'flex-1 flex flex-col justify-center' : ''">
+                <div id="player-container" class="w-full" :class="isFullscreen ? 'h-full' : 'aspect-video'">
+                    <div id="yt-player"></div>
+                </div>
+            </div>
+
+            <!-- Controls Bar -->
+            <div class="bg-gray-900 px-2 sm:px-4 py-2 sm:py-3 space-y-2 sm:space-y-3">
+
+                <!-- Progress Bar -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <span class="text-xs text-gray-400 font-mono min-w-[35px] sm:min-w-[40px] text-center" x-text="currentTimeFormatted">0:00</span>
+                    <div class="flex-1 relative h-2 bg-gray-700 rounded-full cursor-pointer group"
+                         @@click="seekTo($event)"
+                         id="progress-bar">
+                        <div class="h-full bg-indigo-500 rounded-full transition-all relative"
+                             :style="'width:' + progressPercent + '%'">
+                            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow opacity-0 group-hover:opacity-100 transition"></div>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-400 font-mono min-w-[35px] sm:min-w-[40px] text-center" x-text="durationFormatted">0:00</span>
+                </div>
+
+                <!-- Buttons Row -->
+                <div class="flex items-center justify-between flex-wrap gap-y-2">
+                    <div class="flex items-center gap-1 sm:gap-3">
+                        <!-- Play/Pause -->
+                        <button @@click="togglePlay()"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 rounded-full text-white transition shrink-0">
+                            <template x-if="!isPlaying">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                </svg>
+                            </template>
+                            <template x-if="isPlaying">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </template>
+                        </button>
+
+                        <!-- Rewind 10s -->
+                        <button @@click="skip(-10)"
+                                class="text-gray-400 hover:text-white transition text-xs sm:text-sm font-medium px-1 sm:px-2 shrink-0"
+                                title="Voltar 10 segundos">
+                            ⏪<span class="hidden sm:inline"> 10s</span>
+                        </button>
+
+                        <!-- Forward 10s -->
+                        <button @@click="skip(10)"
+                                class="text-gray-400 hover:text-white transition text-xs sm:text-sm font-medium px-1 sm:px-2 shrink-0"
+                                title="Avançar 10 segundos">
+                            <span class="hidden sm:inline">10s </span>⏩
+                        </button>
+
+                        <!-- Volume Control -->
+                        <div class="flex items-center gap-1 sm:gap-2 ml-1 sm:ml-2 shrink-0">
+                            <button @@click="toggleMute()"
+                                    class="text-gray-400 hover:text-white transition p-1"
+                                    title="Mudo (M)">
+                                <template x-if="volume > 50">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M14.016 3.234C14.016 2.04 12.558 1.442 11.734 2.266L7.172 6.828H4C2.9 6.828 2 7.728 2 8.828v6.344c0 1.1.9 2 2 2h3.172l4.562 4.562c.824.824 2.282.226 2.282-.966V3.234zM18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM16 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </template>
+                                <template x-if="volume > 0 && volume <= 50">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M14.016 3.234C14.016 2.04 12.558 1.442 11.734 2.266L7.172 6.828H4C2.9 6.828 2 7.728 2 8.828v6.344c0 1.1.9 2 2 2h3.172l4.562 4.562c.824.824 2.282.226 2.282-.966V3.234zM18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                                </template>
+                                <template x-if="volume === 0">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M14.016 3.234C14.016 2.04 12.558 1.442 11.734 2.266L7.172 6.828H4C2.9 6.828 2 7.728 2 8.828v6.344c0 1.1.9 2 2 2h3.172l4.562 4.562c.824.824 2.282.226 2.282-.966V3.234zM19 12l2.12-2.12a1 1 0 10-1.42-1.42L17.58 10.58l-2.12-2.12a1 1 0 00-1.42 1.42L16.16 12l-2.12 2.12a1 1 0 101.42 1.42l2.12-2.12 2.12 2.12a1 1 0 001.42-1.42L19 12z"/></svg>
+                                </template>
+                            </button>
+                            <input type="range" min="0" max="100" x-model="volume" @@input="setVolume(volume)"
+                                   class="w-16 sm:w-20 h-1 accent-indigo-500 cursor-pointer hidden sm:block" />
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 sm:gap-4 ml-auto">
+                        <!-- Speed Control -->
+                        <div class="flex items-center gap-1 sm:gap-2">
+                            <span class="hidden lg:inline text-xs text-gray-500">Velocidade:</span>
+                            <template x-for="s in speeds" :key="s">
+                                <button @@click="setSpeed(s)"
+                                        :class="[
+                                            speed === s ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600',
+                                            [0.5, 0.75, 1.25, 1.75].includes(s) ? 'hidden lg:block' : 'block'
+                                        ]"
+                                        class="px-1.5 sm:px-2 py-1 rounded text-[10px] sm:text-xs font-semibold transition"
+                                        x-text="s + 'x'">
+                                </button>
+                            </template>
+                        </div>
+
+                        <!-- Fullscreen -->
+                        <button @@click="toggleFullscreen(true)"
+                                class="text-gray-400 hover:text-white transition p-1 shrink-0 bg-gray-800 rounded-lg shadow-sm"
+                                title="Tela inteira (F)">
+                            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyboard shortcuts hint -->
+        <div class="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <p class="text-sm font-semibold text-gray-700 mb-2">⌨️ Atalhos do teclado</p>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs text-gray-500">
+                <span><kbd class="bg-gray-200 px-1.5 py-0.5 rounded font-mono">Espaço</kbd> Play/Pause</span>
+                <span><kbd class="bg-gray-200 px-1.5 py-0.5 rounded font-mono">←</kbd> -10 segundos</span>
+                <span><kbd class="bg-gray-200 px-1.5 py-0.5 rounded font-mono">→</kbd> +10 segundos</span>
+                <span><kbd class="bg-gray-200 px-1.5 py-0.5 rounded font-mono">+/-</kbd> Velocidade</span>
+                <span><kbd class="bg-gray-200 px-1.5 py-0.5 rounded font-mono">M</kbd> Mudo</span>
+                <span><kbd class="bg-gray-200 px-1.5 py-0.5 rounded font-mono">F</kbd> Tela inteira</span>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @if (!string.IsNullOrEmpty(videoId))
+    {
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script>
+            var ytPlayer;
+            var videoId = '@videoId';
+
+            function onYouTubeIframeAPIReady() {
+                ytPlayer = new YT.Player('yt-player', {
+                    videoId: videoId,
+                    width: '100%',
+                    height: '100%',
+                    playerVars: {
+                        'autoplay': 0,
+                        'controls': 0,
+                        'modestbranding': 1,
+                        'rel': 0,
+                        'showinfo': 0,
+                        'fs': 1,
+                        'playsinline': 1,
+                        'origin': window.location.origin
+                    },
+                    events: {
+                        'onReady': function(e) {
+                            document.getElementById('yt-player').style.width = '100%';
+                            document.getElementById('yt-player').style.height = '100%';
+                            // Notify Alpine
+                            window.dispatchEvent(new CustomEvent('yt-ready'));
+                        },
+                        'onStateChange': function(e) {
+                            window.dispatchEvent(new CustomEvent('yt-state', { detail: e.data }));
+                        }
+                    }
+                });
+            }
+
+            function videoPlayer() {
+                return {
+                    isPlaying: false,
+                    isFullscreen: false,
+                    currentTime: 0,
+                    duration: 0,
+                    progressPercent: 0,
+                    speed: 1,
+                    speeds: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+                    volume: 100,
+                    prevVolume: 100,
+                    timer: null,
+
+                    init() {
+                        window.addEventListener('yt-ready', () => {
+                            this.duration = ytPlayer.getDuration();
+                            this.volume = ytPlayer.getVolume();
+                            this.startTimer();
+                        });
+                        window.addEventListener('yt-state', (e) => {
+                            this.isPlaying = e.detail === YT.PlayerState.PLAYING;
+                        });
+                        document.addEventListener('fullscreenchange', () => {
+                            this.isFullscreen = !!document.fullscreenElement;
+                        });
+                        document.addEventListener('webkitfullscreenchange', () => {
+                            this.isFullscreen = !!document.webkitFullscreenElement;
+                        });
+                        // Keyboard shortcuts
+                        document.addEventListener('keydown', (e) => {
+                            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                            switch(e.code) {
+                                case 'Space':
+                                    e.preventDefault();
+                                    this.togglePlay();
+                                    break;
+                                case 'ArrowLeft':
+                                    e.preventDefault();
+                                    this.skip(-10);
+                                    break;
+                                case 'ArrowRight':
+                                    e.preventDefault();
+                                    this.skip(10);
+                                    break;
+                                case 'ArrowUp':
+                                    e.preventDefault();
+                                    this.setVolume(Math.min(100, this.volume + 10));
+                                    break;
+                                case 'ArrowDown':
+                                    e.preventDefault();
+                                    this.setVolume(Math.max(0, this.volume - 10));
+                                    break;
+                                case 'Equal':
+                                case 'NumpadAdd':
+                                    e.preventDefault();
+                                    this.changeSpeed(1);
+                                    break;
+                                case 'Minus':
+                                case 'NumpadSubtract':
+                                    e.preventDefault();
+                                    this.changeSpeed(-1);
+                                    break;
+                                case 'KeyM':
+                                    e.preventDefault();
+                                    this.toggleMute();
+                                    break;
+                                case 'KeyF':
+                                    e.preventDefault();
+                                    this.toggleFullscreen();
+                                    break;
+                            }
+                        });
+                    },
+
+                    startTimer() {
+                        this.timer = setInterval(() => {
+                            if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
+                                this.currentTime = ytPlayer.getCurrentTime();
+                                this.duration = ytPlayer.getDuration();
+                                if (this.duration > 0) {
+                                    this.progressPercent = (this.currentTime / this.duration) * 100;
+                                }
+                            }
+                        }, 250);
+                    },
+
+                    togglePlay() {
+                        if (!ytPlayer) return;
+                        if (this.isPlaying) {
+                            ytPlayer.pauseVideo();
+                        } else {
+                            if (window.innerWidth < 768 && !document.fullscreenElement) {
+                                this.toggleFullscreen(true);
+                            }
+                            ytPlayer.playVideo();
+                        }
+                    },
+
+                    skip(seconds) {
+                        if (!ytPlayer) return;
+                        var newTime = ytPlayer.getCurrentTime() + seconds;
+                        newTime = Math.max(0, Math.min(newTime, this.duration));
+                        ytPlayer.seekTo(newTime, true);
+                    },
+
+                    seekTo(event) {
+                        if (!ytPlayer) return;
+                        var bar = document.getElementById('progress-bar');
+                        var rect = bar.getBoundingClientRect();
+                        var percent = (event.clientX - rect.left) / rect.width;
+                        var time = percent * this.duration;
+                        ytPlayer.seekTo(time, true);
+                    },
+
+                    setSpeed(s) {
+                        if (!ytPlayer) return;
+                        this.speed = s;
+                        ytPlayer.setPlaybackRate(s);
+                    },
+
+                    changeSpeed(direction) {
+                        var idx = this.speeds.indexOf(this.speed);
+                        var newIdx = idx + direction;
+                        if (newIdx >= 0 && newIdx < this.speeds.length) {
+                            this.setSpeed(this.speeds[newIdx]);
+                        }
+                    },
+
+                    setVolume(v) {
+                        v = parseInt(v);
+                        this.volume = v;
+                        if (ytPlayer) {
+                            ytPlayer.setVolume(v);
+                            if (v === 0) ytPlayer.mute(); else ytPlayer.unMute();
+                        }
+                    },
+
+                    toggleMute() {
+                        if (this.volume > 0) {
+                            this.prevVolume = this.volume;
+                            this.setVolume(0);
+                        } else {
+                            this.setVolume(this.prevVolume || 100);
+                        }
+                    },
+
+                    toggleFullscreen(autoLockLandscape = false) {
+                        var container = document.getElementById('fullscreen-wrapper');
+                        if (!container) return;
+                        if (!document.fullscreenElement) {
+                            container.requestFullscreen().then(() => {
+                                if (autoLockLandscape && screen.orientation && screen.orientation.lock) {
+                                    screen.orientation.lock('landscape').catch(function() {});
+                                }
+                            }).catch(function() {});
+                        } else {
+                            if (document.exitFullscreen) {
+                                document.exitFullscreen().then(() => {
+                                    if (screen.orientation && screen.orientation.unlock) {
+                                        screen.orientation.unlock();
+                                    }
+                                }).catch(function() {});
+                            }
+                        }
+                    },
+
+                    get currentTimeFormatted() {
+                        return this.formatTime(this.currentTime);
+                    },
+
+                    get durationFormatted() {
+                        return this.formatTime(this.duration);
+                    },
+
+                    formatTime(seconds) {
+                        var s = Math.floor(seconds);
+                        var h = Math.floor(s / 3600);
+                        var m = Math.floor((s % 3600) / 60);
+                        var sec = s % 60;
+                        if (h > 0) return h + ':' + String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+                        return m + ':' + String(sec).padStart(2, '0');
+                    }
+                };
+            }
+        </script>
+    }
+}

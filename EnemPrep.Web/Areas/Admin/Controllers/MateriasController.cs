@@ -1,10 +1,12 @@
 using EnemPrep.Web.ApiClients;
 using EnemPrep.Web.Areas.Admin.ViewModels.Materias;
+using EnemPrep.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[VerificaSessaoAdmin]
 public class MateriasController(IMateriaApiClient materiaClient) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
@@ -79,8 +81,15 @@ public class MateriasController(IMateriaApiClient materiaClient) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Deletar(Guid id, CancellationToken ct)
     {
-        await materiaClient.DeletarAsync(id, ct);
-        TempData["Sucesso"] = "Matéria removida.";
+        var sucesso = await materiaClient.DeletarAsync(id, ct);
+        if (sucesso)
+        {
+            TempData["Sucesso"] = "Matéria removida.";
+        }
+        else
+        {
+            TempData["Erro"] = "Não foi possível remover a matéria. Verifique se existem livros vinculados a ela.";
+        }
         return RedirectToAction(nameof(Index));
     }
 }

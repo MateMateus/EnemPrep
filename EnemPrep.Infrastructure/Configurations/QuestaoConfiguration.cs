@@ -24,8 +24,11 @@ public class QuestaoConfiguration : IEntityTypeConfiguration<Questao>
         builder.Property(q => q.Explicacao)
             .HasMaxLength(5000);
 
+        builder.Property(q => q.VideoExplicacaoUrl)
+            .HasMaxLength(500);
+
         builder.Property(q => q.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasMany(q => q.Alternativas)
             .WithOne(a => a.Questao)
@@ -39,5 +42,10 @@ public class QuestaoConfiguration : IEntityTypeConfiguration<Questao>
 
         builder.Navigation(q => q.Alternativas).HasField("_alternativas");
         builder.Navigation(q => q.Tentativas).HasField("_tentativas");
+
+        // Indices para filtros frequentes
+        builder.HasIndex(q => q.AssuntoId);
+        builder.HasIndex(q => q.LivroTemaId);
+        builder.HasIndex(q => q.LivroId);
     }
 }

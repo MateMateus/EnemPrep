@@ -9,14 +9,45 @@
 <div class="max-w-4xl mx-auto">
     <div class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Questão Selecionada</h1>
-            <p class="text-gray-600 mt-1">Nível de Dificuldade: @Model.Dificuldade</p>
+            @if (ViewBag.TemaId != null)
+            {
+                <h1 class="text-3xl font-bold text-gray-900">Questões do Tema</h1>
+                <p class="text-gray-600 mt-1">Questão @(ViewBag.CurrentIndex + 1) de @(ViewBag.ListaIds.Count)</p>
+            }
+            else
+            {
+                <h1 class="text-3xl font-bold text-gray-900">Questão Selecionada</h1>
+                <p class="text-gray-600 mt-1">Nível de Dificuldade: @Model.Dificuldade</p>
+            }
         </div>
-        <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
-            class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
-            &larr; Voltar para a lista
-        </a>
+        @if (ViewBag.TemaId != null)
+        {
+            <a href="/livros/ler/@(Model.LivroId ?? Guid.Empty)?temaId=@ViewBag.TemaId"
+               class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                &larr; Voltar para o Livro
+            </a>
+        }
+        else
+        {
+            <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
+               class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                &larr; Voltar para a lista
+            </a>
+        }
     </div>
+
+    @if (ViewBag.TemaId != null && ViewBag.ListaIds.Count > 1)
+    {
+        <div class="mb-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            @for (int i = 0; i < ViewBag.ListaIds.Count; i++)
+            {
+                <a href="/Questoes/Resolver?temaId=@ViewBag.TemaId&index=@i" 
+                   class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg border font-bold text-sm transition-all @(ViewBag.CurrentIndex == i ? "bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-200" : "bg-white text-gray-600 border-gray-200 hover:border-indigo-300")">
+                    @(i + 1)
+                </a>
+            }
+        </div>
+    }
 
     <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
         <div class="p-6 md:p-8">
@@ -54,8 +85,19 @@
                 <div id="alert-resultado" class="rounded-md p-4 mb-6"></div>
 
                 <div id="explicacao-container" class="bg-blue-50 border border-blue-200 rounded-lg p-6 hidden">
-                    <h4 class="text-lg font-medium text-blue-900 mb-2">Explicação do Professor</h4>
-                    <p id="explicacao-texto" class="text-blue-800 whitespace-pre-wrap">@Model.Explicacao</p>
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-lg font-medium text-blue-900">Explicação do Professor</h4>
+                        @if (!string.IsNullOrWhiteSpace(Model.VideoExplicacaoUrl))
+                        {
+                            <button type="button" onclick="openVideo()" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                🎬 Ver Vídeo Explicativo
+                            </button>
+                        }
+                    </div>
+                    <div id="explicacao-texto" class="prose prose-blue max-w-none text-blue-800">
+                        <textarea id="raw-explicacao" class="hidden">@Model.Explicacao</textarea>
+                        <div id="rendered-explicacao"></div>
+                    </div>
                 </div>
 
                 <div class="mt-6 flex justify-between">
@@ -63,13 +105,50 @@
                         class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
                         Ver meu histórico
                     </a>
-                    <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                        Próxima Questão
-                    </a>
+                    
+                    @if (ViewBag.TemaId != null && ViewBag.CurrentIndex < ViewBag.ListaIds.Count - 1)
+                    {
+                        <a href="/Questoes/Resolver?temaId=@ViewBag.TemaId&index=@(ViewBag.CurrentIndex + 1)"
+                           class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                            Próxima Questão &rarr;
+                        </a>
+                    }
+                    else if (ViewBag.TemaId != null)
+                    {
+                        <a href="/livros/ler/@(Model.LivroId ?? Guid.Empty)?temaId=@ViewBag.TemaId"
+                           class="inline-flex justify-center py-2 px-4 border border-indigo-600 shadow-sm text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50">
+                            Voltar para o Livro
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="ListarPorAssunto" asp-route-assuntoId="@Model.AssuntoId"
+                           class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                            Próxima Questão
+                        </a>
+                    }
                 </div>
             </div>
+
         </div>
+    </div>
+</div>
+
+<!-- Floating PiP Video Container -->
+<div id="floating-video-container" class="hidden fixed bottom-4 right-4 z-50 w-80 md:w-96 shadow-2xl rounded-lg overflow-hidden border border-gray-700 bg-black flex flex-col transition-opacity" style="touch-action: none;">
+    <div id="video-drag-handle" class="bg-gray-800 text-white px-3 py-2 flex justify-between items-center cursor-move shadow select-none">
+        <span class="text-xs font-medium text-gray-200 pointer-events-none">Explicação em Vídeo</span>
+        <div class="flex items-center space-x-3">
+            <a href="/VideoAulas/Assistir?url=@Uri.EscapeDataString(Model.VideoExplicacaoUrl ?? string.Empty)&titulo=Explicacao_Questao" target="_blank" onclick="closeVideo()" title="Abrir em Nova Guia" class="text-gray-400 hover:text-white focus:outline-none">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+            <button type="button" onclick="closeVideo()" title="Fechar" class="text-gray-400 hover:text-white focus:outline-none">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+    <div class="relative w-full" style="padding-bottom: 56.25%;">
+        <iframe id="floating-video-iframe" class="absolute top-0 left-0 w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
 
@@ -197,6 +276,17 @@
                     });
 
                     if (data.explicacao) {
+                        const rawText = document.getElementById('raw-explicacao').value || data.explicacao;
+                        if (window.marked) {
+                            document.getElementById('rendered-explicacao').innerHTML = marked.parse(rawText);
+                        } else {
+                            document.getElementById('rendered-explicacao').innerText = rawText;
+                        }
+
+                        if (window.MathJax) {
+                            MathJax.typesetPromise([document.getElementById('rendered-explicacao')]).catch(err => console.log('MathJax error', err));
+                        }
+
                         document.getElementById('explicacao-container').classList.remove('hidden');
                     }
 
@@ -215,5 +305,102 @@
                 btn.innerHTML = 'Confirmar Resposta';
             }
         });
+
+        // Floating Video Player Logic
+        function extractVideoId(url) {
+            let videoId = '';
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+            const match = url.match(regex);
+            if (match && match[1]) {
+                videoId = match[1];
+            }
+            return videoId;
+        }
+
+        function openVideo() {
+            const rawUrl = '@Html.Raw(Model.VideoExplicacaoUrl)';
+            if (!rawUrl) return;
+            
+            const videoId = extractVideoId(rawUrl);
+            if (!videoId) {
+                // Fallback for non-youtube links
+                window.open(rawUrl, '_blank');
+                return;
+            }
+            
+            const container = document.getElementById('floating-video-container');
+            const iframe = document.getElementById('floating-video-iframe');
+            
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            container.classList.remove('hidden');
+        }
+
+        function closeVideo() {
+            const container = document.getElementById('floating-video-container');
+            const iframe = document.getElementById('floating-video-iframe');
+            
+            iframe.src = '';
+            container.classList.add('hidden');
+        }
+
+        // --- Dragging Logic ---
+        const pipContainer = document.getElementById('floating-video-container');
+        const pipHeader = document.getElementById('video-drag-handle');
+
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        pipHeader.addEventListener('mousedown', dragStart);
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('mousemove', drag);
+        
+        // Touch support
+        pipHeader.addEventListener('touchstart', dragStart, {passive: true});
+        document.addEventListener('touchend', dragEnd, {passive: true});
+        document.addEventListener('touchmove', drag, {passive: false});
+
+        function dragStart(e) {
+            // Do not drag if clicking on buttons/links
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) {
+                return;
+            }
+
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            isDragging = true;
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+
+                xOffset = currentX;
+                yOffset = currentY;
+                pipContainer.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+            }
+        }
     </script>
 }

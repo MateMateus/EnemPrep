@@ -30,6 +30,23 @@ public class VideoAulaRepository : IVideoAulaRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<(IReadOnlyList<VideoAula> Items, int TotalCount)> GetPagedByAssuntoIdAsync(Guid assuntoId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var query = _context.VideoAulas
+            .AsNoTracking()
+            .Where(v => v.AssuntoId == assuntoId);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(v => v.Titulo)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
+
     public async Task AddAsync(VideoAula videoAula, CancellationToken cancellationToken = default)
     {
         await _context.VideoAulas.AddAsync(videoAula, cancellationToken);
@@ -46,5 +63,12 @@ public class VideoAulaRepository : IVideoAulaRepository
     {
         _context.VideoAulas.Remove(videoAula);
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task DeleteByAssuntoIdAsync(Guid assuntoId, CancellationToken cancellationToken = default)
+    {
+        await _context.VideoAulas
+            .Where(v => v.AssuntoId == assuntoId)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

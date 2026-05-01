@@ -19,12 +19,17 @@ public class TentativaQuestaoConfiguration : IEntityTypeConfiguration<TentativaQ
             .IsRequired();
 
         builder.Property(t => t.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(t => t.AlternativaSelecionada)
             .WithMany()
             .HasForeignKey(t => t.AlternativaSelecionadaId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false);
+
+        // Indices para historico e estatisticas por usuario
+        builder.HasIndex(t => t.UsuarioId);
+        builder.HasIndex(t => t.QuestaoId);
+        builder.HasIndex(t => new { t.UsuarioId, t.QuestaoId });
     }
 }

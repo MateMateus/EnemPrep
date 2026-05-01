@@ -16,7 +16,7 @@ public class SimuladoQuestaoConfiguration : IEntityTypeConfiguration<SimuladoQue
             .IsRequired();
 
         builder.Property(sq => sq.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Relacionamentos configurados na outra ponta (Simulado e Questao) porem confirmamos obrigatorio aqui
         builder.HasOne(sq => sq.Questao)

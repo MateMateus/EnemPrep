@@ -1,10 +1,12 @@
 using EnemPrep.Api.Extensions;
 using EnemPrep.Application.DTOs.Perfil;
 using EnemPrep.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/perfil")]
 public class PerfilController : ControllerBase

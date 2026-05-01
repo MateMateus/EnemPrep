@@ -22,7 +22,7 @@ public class TentativaSimuladoConfiguration : IEntityTypeConfiguration<Tentativa
             .IsRequired(false);
 
         builder.Property(ts => ts.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(ts => ts.Usuario)
             .WithMany() // Usuario nao tem colecao de tentativas de simulado
@@ -35,5 +35,8 @@ public class TentativaSimuladoConfiguration : IEntityTypeConfiguration<Tentativa
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(ts => ts.Respostas).HasField("_respostas");
+
+        // Indice para historico por usuario
+        builder.HasIndex(ts => ts.UsuarioId);
     }
 }

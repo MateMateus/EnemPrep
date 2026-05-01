@@ -1,20 +1,20 @@
-@model List<EnemPrep.Web.Models.Shared.VideoAulaViewModel>
+@model EnemPrep.Web.Models.Shared.PagedResult<EnemPrep.Web.Models.Shared.VideoAulaViewModel>
 @{
     ViewData["Title"] = "Videoaulas";
     Layout = "_LayoutAluno";
 }
 
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-6 flex flex-col sm:justify-between sm:items-center gap-4">
     <div>
         <h1 class="text-3xl font-bold text-gray-900">📺 Videoaulas</h1>
         <p class="text-gray-600 mt-1">Assista às aulas deste assunto para fixar a teoria.</p>
     </div>
-    <a href="javascript:history.back()" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+    <a href="javascript:history.back()" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium w-fit">
         &larr; Voltar
     </a>
 </div>
 
-@if (!Model.Any())
+@if (!Model.Items.Any())
 {
     <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center text-gray-500">
         <div class="text-4xl mb-3">📭</div>
@@ -24,11 +24,16 @@
 else
 {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @foreach (var aula in Model)
+        @foreach (var aula in Model.Items)
         {
-            <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200 hover:shadow-lg transition">
-                <!-- Mock thumbnail de vídeo -->
-                <div class="bg-gray-800 aspect-video flex items-center justify-center relative cursor-pointer group" onclick="alert('Player de vídeo virá em refinamentos futuros')">
+            <a asp-action="Assistir"
+               asp-route-url="@aula.UrlVideo"
+               asp-route-titulo="@aula.Titulo"
+               asp-route-duracao="@aula.DuracaoSegundos"
+               asp-route-assuntoId="@ViewBag.AssuntoId"
+               class="bg-white rounded-xl shadow overflow-hidden border border-gray-200 hover:shadow-lg transition block">
+                <!-- Thumbnail -->
+                <div class="bg-gray-800 aspect-video flex items-center justify-center relative group">
                     <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg>
                     <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
                         @aula.DuracaoFormatada
@@ -36,9 +41,32 @@ else
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-bold text-gray-900 mb-1 line-clamp-2">@aula.Titulo</h3>
-                    <p class="text-xs text-indigo-600 font-medium mt-2">Assistir Aula &rarr;</p>
+                    <p class="text-xs text-indigo-600 font-medium mt-2">▶ Assistir Aula &rarr;</p>
                 </div>
-            </div>
+            </a>
         }
     </div>
+    
+    @if (Model.TotalPages > 1)
+    {
+        <div class="mt-8 flex justify-center items-center space-x-2">
+            @if (Model.PageNumber > 1)
+            {
+                <a asp-action="ListarPorAssunto" asp-route-assuntoId="@ViewBag.AssuntoId" asp-route-page="@(Model.PageNumber - 1)" 
+                   class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition">
+                    Anterior
+                </a>
+            }
+            
+            <span class="text-sm text-gray-600 font-medium">Página @Model.PageNumber de @Model.TotalPages</span>
+            
+            @if (Model.PageNumber < Model.TotalPages)
+            {
+                <a asp-action="ListarPorAssunto" asp-route-assuntoId="@ViewBag.AssuntoId" asp-route-page="@(Model.PageNumber + 1)" 
+                   class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition">
+                    Próxima
+                </a>
+            }
+        </div>
+    }
 }

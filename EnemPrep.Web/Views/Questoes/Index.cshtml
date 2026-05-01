@@ -20,8 +20,8 @@ else
     <div class="space-y-6">
         @foreach (var materia in Model)
         {
-            <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleAssuntos('@materia.Id')">
+            <div class="bg-white rounded-xl shadow border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <div class="p-4 sm:p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center cursor-pointer" onclick="toggleAssuntos('@materia.Id')">
                     <div>
                         <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
                             <span>📚</span> @materia.Nome

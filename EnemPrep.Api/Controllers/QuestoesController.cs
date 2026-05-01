@@ -2,10 +2,12 @@ using EnemPrep.Api.Extensions;
 using EnemPrep.Application.Common;
 using EnemPrep.Application.DTOs.Questoes;
 using EnemPrep.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api")]
 public class QuestoesController : ControllerBase
@@ -32,9 +34,16 @@ public class QuestoesController : ControllerBase
     public async Task<IActionResult> GetByAssunto(Guid assuntoId, [FromQuery] PagedRequest request, CancellationToken cancellationToken)
     {
         var result = await _questaoService.GetPagedByAssuntoAsync(assuntoId, request, cancellationToken);
-
         return Ok(ApiResponse<PagedResult<QuestaoDto>>.Ok(result.Data!));
     }
+
+    [HttpGet("temas/{temaId:guid}/questoes")]
+    public async Task<IActionResult> GetByTema(Guid temaId, [FromQuery] PagedRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _questaoService.GetPagedByTemaAsync(temaId, request, cancellationToken);
+        return Ok(ApiResponse<PagedResult<QuestaoDto>>.Ok(result.Data!));
+    }
+
 
     [HttpPost("questoes")]
     public async Task<IActionResult> Criar([FromBody] CriarQuestaoRequest request, CancellationToken cancellationToken)
@@ -45,6 +54,17 @@ public class QuestoesController : ControllerBase
             return BadRequest(ApiResponse<object>.Fail(result.ErrorMessage!));
 
         return Created(string.Empty, ApiResponse<QuestaoDto>.Ok(result.Data!));
+    }
+
+    [HttpPut("questoes/{id:guid}")]
+    public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarQuestaoRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _questaoService.AtualizarAsync(id, request, cancellationToken);
+
+        if (!result.Success)
+            return BadRequest(ApiResponse<object>.Fail(result.ErrorMessage!));
+
+        return Ok(ApiResponse<QuestaoDto>.Ok(result.Data!));
     }
 
     [HttpPost("questoes/responder")]

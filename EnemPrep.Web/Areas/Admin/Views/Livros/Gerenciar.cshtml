@@ -1,0 +1,158 @@
+@model EnemPrep.Web.Models.Shared.LivroDetalhesViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var apiBaseUrl = Configuration["ApiBaseUrl"]?.TrimEnd('/');
+}
+
+<div class="max-w-6xl mx-auto">
+    <div class="mb-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <a asp-action="Index" class="text-indigo-600 hover:text-indigo-800">← Voltar</a>
+            <h1 class="text-2xl font-bold">@Model.Titulo</h1>
+        </div>
+        <div class="flex gap-2 flex-wrap items-center">
+             <button onclick="document.getElementById('modal-temas').showModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap">
+                + Novo Tema
+            </button>
+            <button onclick="document.getElementById('modal-paginas').showModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors whitespace-nowrap">
+                + Adicionar Páginas
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Coluna Temas -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="font-bold text-lg mb-4 flex items-center gap-2">
+                    <span class="text-purple-600">📌</span> Temas (Índice)
+                </h2>
+                <div class="space-y-3">
+                    @foreach (var tema in Model.Temas.OrderBy(t => t.PaginaInicial))
+                    {
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                            <div>
+                                <div class="font-medium text-gray-900">@tema.Nome</div>
+                                <div class="text-xs text-gray-500">Págs: @tema.PaginaInicial - @tema.PaginaFinal</div>
+                            </div>
+                            <form asp-action="DeletarTema" asp-route-id="@Model.Id" asp-route-temaId="@tema.Id" method="post" onsubmit="return confirm('Remover tema?')">
+                                <button type="submit" class="text-red-500 hover:text-red-700 text-sm">Remover</button>
+                            </form>
+                        </div>
+                    }
+                    @if (!Model.Temas.Any())
+                    {
+                        <p class="text-gray-500 text-sm italic">Nenhum tema definido.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna Páginas -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="font-bold text-lg mb-4 flex items-center gap-2">
+                    <span class="text-indigo-600">📄</span> Páginas Cadastradas (@Model.TotalPaginas)
+                </h2>
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                    @foreach (var pag in Model.Paginas.OrderBy(p => p.NumeroProprio))
+                    {
+                        <div class="relative group aspect-[3/4] bg-gray-100 rounded overflow-hidden border border-gray-200">
+                            <img src="@(pag.UrlImagem.StartsWith("http") ? pag.UrlImagem : (apiBaseUrl + pag.UrlImagem))" class="w-full h-full object-cover" />
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/70 text-white flex justify-between items-center px-2 py-1">
+                                <span class="text-[11px]">Pág @pag.NumeroProprio</span>
+                                <form asp-action="RemoverPagina" asp-route-id="@Model.Id" asp-route-paginaId="@pag.Id" method="post" class="inline m-0" onsubmit="return confirm('Tem certeza que deseja remover a página @pag.NumeroProprio?')">
+                                    <button type="submit" class="text-red-400 hover:text-red-500 font-bold p-0 text-[12px]" title="Remover Página">X</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (!Model.Paginas.Any())
+                {
+                    <div class="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg">
+                        <p class="text-gray-400">Nenhuma página adicionada ainda.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Upload PDF -->
+<dialog id="modal-paginas" class="rounded-xl shadow-2xl p-0 w-full max-w-lg overflow-hidden border-none backdrop:bg-black/50">
+    <div class="p-6">
+        <h3 class="text-lg font-bold mb-4">Adicionar Páginas via PDF</h3>
+        <p class="text-sm text-gray-600 mb-4">Selecione um arquivo PDF. O sistema irá extrair automaticamente todas as páginas como imagens de alta qualidade.</p>
+        <form asp-action="UploadPdf" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+            <div class="flex items-center justify-center w-full mt-4">
+                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-48 border-2 border-indigo-300 border-dashed rounded-lg cursor-pointer bg-indigo-50 hover:bg-indigo-100 transition-colors">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-10 h-10 mb-3 text-indigo-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Clique para enviar</span> ou arraste o PDF</p>
+                        <p class="text-xs text-gray-500">Documento PDF (Máx. sugerido 50MB)</p>
+                    </div>
+                    <input id="dropzone-file" type="file" name="arquivoPdf" accept="application/pdf" class="hidden" required />
+                </label>
+            </div>
+            <div id="file-name-display" class="mt-3 text-sm font-medium text-indigo-700 text-center hidden">
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3" id="actions-container">
+                <button type="button" onclick="document.getElementById('modal-paginas').close()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</button>
+                <button type="submit" id="btn-submit" onclick="showLoading()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2">
+                    <span>Processar PDF</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<script>
+    document.getElementById('dropzone-file').addEventListener('change', function(e) {
+        var fileName = e.target.files[0]?.name;
+        if (fileName) {
+            var display = document.getElementById('file-name-display');
+            display.textContent = "Arquivo selecionado: " + fileName;
+            display.classList.remove('hidden');
+        }
+    });
+
+    function showLoading() {
+        if (!document.getElementById('dropzone-file').value) return;
+        var btn = document.getElementById('btn-submit');
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 1rem; height: 1rem; border-width: 0.15em;"></span> Extraindo páginas, aguarde...';
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+    }
+</script>
+
+<!-- Modal Novo Tema -->
+<dialog id="modal-temas" class="rounded-xl shadow-2xl p-0 w-full max-w-md overflow-hidden border-none backdrop:bg-black/50">
+    <div class="p-6">
+        <h3 class="text-lg font-bold mb-4">Definir Novo Tema</h3>
+        <form asp-action="CriarTema" asp-route-id="@Model.Id" method="post" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nome do Tema</label>
+                <input name="Nome" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Ex: Equações de 1º Grau" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Página Inicial</label>
+                    <input type="number" name="PaginaInicial" required min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Página Final</label>
+                    <input type="number" name="PaginaFinal" required min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modal-temas').close()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</button>
+                <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">Criar Tema</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+

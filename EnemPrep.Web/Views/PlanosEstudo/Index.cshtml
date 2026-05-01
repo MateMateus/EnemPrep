@@ -80,22 +80,19 @@
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Agenda da Semana</h3>
         
         <div class="space-y-4">
-            @foreach (var grupo in Model.Itens.GroupBy(i => i.DataPrevista.Date).OrderBy(g => g.Key))
+            @foreach (var dia in Model.Agenda)
             {
-                var ehHoje = grupo.Key == DateTime.Today;
-                var perdeuPrazo = grupo.Key < DateTime.Today && grupo.Any(i => i.Status == EnemPrep.Web.Enums.StatusPlanoItem.Pendente);
-
-                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border @(ehHoje ? "border-blue-500 ring-1 ring-blue-500" : "border-gray-100 dark:border-slate-700") overflow-hidden">
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border @(dia.EhHoje ? "border-blue-500 ring-1 ring-blue-500" : "border-gray-100 dark:border-slate-700") overflow-hidden">
                     <div class="px-6 py-4 bg-gray-50 dark:bg-slate-800/80 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center">
                         <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 flex items-center">
-                            @if (ehHoje)
+                            @if (dia.EhHoje)
                             {
                                 <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">Hoje</span>
                             }
-                            @grupo.Key.ToString("dddd, dd 'de' MMMM")
+                            @dia.Data.ToString("dddd, dd 'de' MMMM")
                         </h4>
 
-                        @if (perdeuPrazo)
+                        @if (dia.PerdeuPrazo)
                         {
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                                 Atrasado
@@ -104,7 +101,7 @@
                     </div>
                     
                     <ul class="divide-y divide-gray-100 dark:divide-slate-700">
-                        @foreach (var item in grupo)
+                        @foreach (var item in dia.Itens)
                         {
                             var concluido = item.Status == EnemPrep.Web.Enums.StatusPlanoItem.Concluido;
                             

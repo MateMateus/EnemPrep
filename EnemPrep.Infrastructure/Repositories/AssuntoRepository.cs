@@ -47,4 +47,11 @@ public class AssuntoRepository : IAssuntoRepository
         _context.Assuntos.Remove(assunto);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task DeleteByMateriaIdAsync(Guid materiaId, CancellationToken cancellationToken = default)
+    {
+        await _context.Assuntos
+            .Where(a => a.MateriaId == materiaId)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
 }

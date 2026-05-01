@@ -1,0 +1,24 @@
+@model string
+
+@{
+    ViewData["Title"] = "Nenhuma Questão";
+}
+
+<div class="container mt-5 text-center">
+    <div class="row min-vh-50 align-items-center justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 bg-light p-5 rounded-4">
+                <i class="bi bi-journal-x text-muted mb-3" style="font-size: 4rem;"></i>
+                <h3 class="fw-bold text-dark mb-3">Poxa... Nada por aqui!</h3>
+                <p class="text-secondary mb-4">
+                    @Model
+                </p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 py-2 rounded-3 fw-medium">
+                        <i class="bi bi-arrow-left me-2"></i>Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

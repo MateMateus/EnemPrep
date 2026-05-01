@@ -4,14 +4,18 @@ using EnemPrep.Infrastructure;
 using EnemPrep.Infrastructure.Persistence;
 using EnemPrep.Infrastructure.Persistence.Seed;
 using EnemPrep.Api.Extensions;
+using EnemPrep.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Configuration); // agora recebe IConfiguration
 
 var app = builder.Build();
+
+// Security Headers em todas as respostas (antes de qualquer outro middleware)
+app.UseSecurityHeaders();
 
 app.UseExceptionHandler();
 
@@ -25,10 +29,18 @@ if (app.Environment.IsDevelopment())
     await DatabaseSeeder.SeedAsync(context);
 }
 
-app.UseCors("AllowAll");
-
+// HTTPS obrigatório em todos os ambientes
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
+// Rate Limiter (antes do roteamento)
+app.UseRateLimiter();
+
+// CORS com política restrita
+app.UseCors("AllowWeb");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

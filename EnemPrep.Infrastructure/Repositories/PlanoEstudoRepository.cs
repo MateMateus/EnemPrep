@@ -49,4 +49,17 @@ public class PlanoEstudoRepository : IPlanoEstudoRepository
         _context.PlanosEstudo.Remove(plano);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<PlanoEstudoItem?> GetItemByIdAsync(Guid itemId, CancellationToken cancellationToken = default)
+    {
+        // Navega por EntityEntry ou diretamente via DbSet (se exposto futuramente)
+        return await _context.Set<PlanoEstudoItem>()
+            .FirstOrDefaultAsync(i => i.Id == itemId, cancellationToken);
+    }
+
+    public async Task UpdateItemAsync(PlanoEstudoItem item, CancellationToken cancellationToken = default)
+    {
+        _context.Set<PlanoEstudoItem>().Update(item);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

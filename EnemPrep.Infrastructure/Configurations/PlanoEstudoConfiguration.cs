@@ -23,7 +23,7 @@ public class PlanoEstudoConfiguration : IEntityTypeConfiguration<PlanoEstudo>
             .IsRequired();
 
         builder.Property(p => p.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasMany(p => p.Itens)
             .WithOne(i => i.PlanoEstudo)
@@ -31,5 +31,8 @@ public class PlanoEstudoConfiguration : IEntityTypeConfiguration<PlanoEstudo>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(p => p.Itens).HasField("_itens");
+
+        // Indice para busca de planos por usuario
+        builder.HasIndex(p => p.UsuarioId);
     }
 }

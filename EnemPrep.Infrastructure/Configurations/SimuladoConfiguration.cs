@@ -23,7 +23,7 @@ public class SimuladoConfiguration : IEntityTypeConfiguration<Simulado>
             .IsRequired();
 
         builder.Property(s => s.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasMany(s => s.Questoes)
             .WithOne(sq => sq.Simulado)

@@ -6,10 +6,14 @@ public class QuestaoViewModel
     public string Enunciado { get; set; } = string.Empty;
     public string Dificuldade { get; set; } = string.Empty;
     public string? Explicacao { get; set; }
+    public string? VideoExplicacaoUrl { get; set; }
     public Guid AssuntoId { get; set; }
     public string NomeAssunto { get; set; } = string.Empty;
     public List<AlternativaViewModel> Alternativas { get; set; } = [];
+    public Guid? LivroId { get; set; }
+    public Guid? LivroTemaId { get; set; }
 }
+
 
 public class AlternativaViewModel
 {

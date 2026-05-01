@@ -1,0 +1,160 @@
+@model EnemPrep.Web.Areas.Admin.ViewModels.Questoes.EditarQuestaoViewModel
+
+@{
+    ViewData["Title"] = "Editar Questão";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-4">Editar Questão — @Model.AssuntoNome</h2>
+
+                <form asp-action="Editar" method="post" id="formQuestao">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="AssuntoId" />
+                    <input type="hidden" asp-for="AssuntoNome" />
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:@(ViewData.ModelState.ErrorCount > 0 ? "block" : "none")"></div>
+
+                    <div class="row mb-4 bg-light p-3 rounded" style="border: 1px solid #dee2e6;">
+                        <h5 class="mb-3 text-primary"><i class="bi bi-book"></i> Vínculo com Livro (Opcional)</h5>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LivroId" class="form-label fw-semibold">Livro / Prova Antiga</label>
+                            <select asp-for="LivroId" asp-items="ViewBag.Livros" class="form-select" id="livro-select" onchange="carregarTemas()">
+                                <option value="">-- Nenhum Livro Vinculado --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LivroTemaId" class="form-label fw-semibold">Tema do Livro</label>
+                            <select asp-for="LivroTemaId" class="form-select" id="tema-select" disabled>
+                                <option value="">-- Selecione o Livro Primeiro --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Enunciado" class="form-label fw-semibold">Enunciado *</label>
+                        <textarea asp-for="Enunciado" class="form-control" rows="4"
+                                  placeholder="Digite o enunciado da questão..."></textarea>
+                        <span asp-validation-for="Enunciado" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Dificuldade" class="form-label fw-semibold">Dificuldade *</label>
+                        <select asp-for="Dificuldade" class="form-select">
+                            <option value="Facil">Fácil</option>
+                            <option value="Medio">Médio</option>
+                            <option value="Dificil">Difícil</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Explicacao" class="form-label fw-semibold">Explicação da resposta</label>
+                        <textarea asp-for="Explicacao" class="form-control" rows="2"
+                                  placeholder="Opcional: explique por que a alternativa correta é correta"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="VideoExplicacaoUrl" class="form-label fw-semibold">
+                            🎬 Vídeo Explicativo
+                        </label>
+                        <input asp-for="VideoExplicacaoUrl" class="form-control" type="text"
+                               placeholder="Opcional: cole a URL do vídeo (ex: https://youtube.com/watch?v=...)" />
+                        <span asp-validation-for="VideoExplicacaoUrl" class="text-danger small"></span>
+                        <small class="text-muted">Link do YouTube ou outra plataforma com a explicação da questão</small>
+                    </div>
+
+                    <h5 class="mb-3">Alternativas <small class="text-muted fw-normal">(marque apenas 1 como correta)</small></h5>
+
+                    @for (int i = 0; i < Model.Alternativas.Count; i++)
+                    {
+                            <div class="card mb-2 border-0 bg-light">
+                                <div class="card-body py-2 px-3 d-flex gap-3 align-items-start">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="radio" name="alternativaCorreta" value="@i"
+                                    @(Model.Alternativas[i].IsCorreta ? "checked" : "")
+                                               onchange="marcarCorreta(@i)" id="correta_@i" />
+                                        <input type="hidden" name="Alternativas[@i].IsCorreta"
+                                               id="isCorreta_@i" value="@Model.Alternativas[i].IsCorreta.ToString().ToLower()" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label class="form-check-label fw-medium mb-1" for="correta_@i">
+                                            Alternativa @((char)('A' + i))
+                                            <span class="badge bg-success ms-1" id="badge_@i"
+                                                  style="display:@(Model.Alternativas[i].IsCorreta ? "inline" : "none")">Correta</span>
+                                        </label>
+                                        <input type="text" name="Alternativas[@i].Texto"
+                                               value="@Model.Alternativas[i].Texto"
+                                               class="form-control form-control-sm"
+                                               placeholder="Texto da alternativa @((char)('A' + i))" />
+                                    </div>
+                                </div>
+                            </div>
+                    }
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <a asp-action="Index" asp-route-assuntoId="@Model.AssuntoId"
+                           class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            function marcarCorreta(index) {
+                const total = @Model.Alternativas.Count;
+                for (let i = 0; i < total; i++) {
+                    document.getElementById('isCorreta_' + i).value = (i === index).toString().toLowerCase();
+                    document.getElementById('badge_' + i).style.display = (i === index) ? 'inline' : 'none';
+                }
+            }
+
+            async function carregarTemas() {
+                var livroId = document.getElementById('livro-select').value;
+                var temaSelect = document.getElementById('tema-select');
+                var currentTemaId = '@Model.LivroTemaId';
+
+                temaSelect.innerHTML = '<option value="">-- Sem Tema --</option>';
+                temaSelect.disabled = true;
+
+                if (!livroId) {
+                    return;
+                }
+
+                try {
+                    temaSelect.innerHTML = '<option value="">Carregando temas...</option>';
+                    const response = await fetch(`/Admin/Questoes/ObterTemas?livroId=${livroId}`);
+                    const result = await response.json();
+                    
+                    if (result && result.data && result.data.temas) {
+                        temaSelect.innerHTML = '<option value="">-- Selecione o Tema (Opcional) --</option>';
+                        result.data.temas.forEach(tema => {
+                            var option = document.createElement('option');
+                            option.value = tema.id;
+                            option.text = tema.nome;
+                            if (tema.id === currentTemaId) option.selected = true;
+                            temaSelect.appendChild(option);
+                        });
+                        temaSelect.disabled = false;
+                    } else {
+                        temaSelect.innerHTML = '<option value="">Sem temas cadastrados</option>';
+                    }
+                } catch (e) {
+                    temaSelect.innerHTML = '<option value="">Erro ao carregar temas</option>';
+                }
+            }
+
+            // Carrgar temas ao inicializar se já houver livro selecionado
+            document.addEventListener("DOMContentLoaded", function() {
+                if (document.getElementById('livro-select').value) {
+                    carregarTemas();
+                }
+            });
+        </script>
+}

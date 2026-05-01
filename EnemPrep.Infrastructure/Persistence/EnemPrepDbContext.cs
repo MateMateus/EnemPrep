@@ -15,7 +15,6 @@ public class EnemPrepDbContext : DbContext
     public DbSet<Alternativa> Alternativas => Set<Alternativa>();
     public DbSet<TentativaQuestao> TentativasQuestao => Set<TentativaQuestao>();
     public DbSet<VideoAula> VideoAulas => Set<VideoAula>();
-    public DbSet<MaterialEstudo> MateriaisEstudo => Set<MaterialEstudo>();
     public DbSet<PlanoEstudo> PlanosEstudo => Set<PlanoEstudo>();
     public DbSet<PlanoEstudoItem> PlanosEstudoItens => Set<PlanoEstudoItem>();
     public DbSet<StreakUsuario> StreaksUsuario => Set<StreakUsuario>();
@@ -27,6 +26,10 @@ public class EnemPrepDbContext : DbContext
     public DbSet<SimuladoQuestao> SimuladosQuestoes => Set<SimuladoQuestao>();
     public DbSet<TentativaSimulado> TentativasSimulado => Set<TentativaSimulado>();
     public DbSet<RespostaSimulado> RespostasSimulado => Set<RespostaSimulado>();
+
+    public DbSet<Livro> Livros => Set<Livro>();
+    public DbSet<LivroPagina> LivrosPaginas => Set<LivroPagina>();
+    public DbSet<LivroTema> LivrosTemas => Set<LivroTema>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,6 +1,8 @@
 using EnemPrep.Web.ApiClients;
 using EnemPrep.Web.Filters;
+using EnemPrep.Web.Models.Shared;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace EnemPrep.Web.Controllers;
 
@@ -53,15 +55,40 @@ public class QuestoesController(IQuestaoApiClient questaoClient, IMateriaApiClie
         return View(questoesFiltradas);
     }
 
-    [HttpGet("Questoes/Resolver/{id:guid}")]
-    public async Task<IActionResult> Resolver(Guid id, CancellationToken ct)
+    [HttpGet("Questoes/Resolver")]
+    public async Task<IActionResult> Resolver(Guid? id, Guid? temaId, int index = 0, CancellationToken ct = default)
     {
-        var questao = await questaoClient.GetByIdAsync(id, ct);
-        if (questao == null)
-            return NotFound("Questão não encontrada.");
+        List<QuestaoViewModel> listaQuestoes;
 
-        return View(questao);
+        if (temaId.HasValue)
+        {
+            listaQuestoes = await questaoClient.GetByTemaAsync(temaId.Value, ct);
+        }
+        else if (id.HasValue)
+        {
+            var questao = await questaoClient.GetByIdAsync(id.Value, ct);
+            if (questao == null) return NotFound("Questão não encontrada.");
+            listaQuestoes = [questao];
+        }
+        else
+        {
+            return BadRequest("ID da questão ou do tema é obrigatório.");
+        }
+
+        if (index < 0 || index >= listaQuestoes.Count) index = 0;
+        
+        if (listaQuestoes.Count == 0)
+        {
+            return View("Vazio", "Nenhuma questão foi cadastrada para este tema ainda.");
+        }
+
+        ViewBag.ListaIds = listaQuestoes.Select(q => q.Id).ToList();
+        ViewBag.CurrentIndex = index;
+        ViewBag.TemaId = temaId;
+
+        return View(listaQuestoes[index]);
     }
+
 
     [HttpPost("Questoes/Responder")]
     public async Task<IActionResult> Responder([FromBody] ResponderQuestaoRequest request, CancellationToken ct)

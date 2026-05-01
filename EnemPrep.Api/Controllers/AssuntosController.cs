@@ -1,6 +1,7 @@
 using EnemPrep.Api.Extensions;
 using EnemPrep.Application.DTOs.Materias;
 using EnemPrep.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Api.Controllers;
@@ -24,6 +25,7 @@ public class AssuntosController : ControllerBase
         return Ok(ApiResponse<IReadOnlyList<AssuntoDto>>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpPost("assuntos")]
     public async Task<IActionResult> Criar([FromBody] CriarAssuntoRequest request, CancellationToken cancellationToken)
     {
@@ -35,6 +37,7 @@ public class AssuntosController : ControllerBase
         return Created(string.Empty, ApiResponse<AssuntoDto>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpPut("assuntos/{id:guid}")]
     public async Task<IActionResult> Atualizar(Guid id, [FromBody] CriarAssuntoRequest request, CancellationToken cancellationToken)
     {
@@ -46,6 +49,7 @@ public class AssuntosController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("assuntos/{id:guid}")]
     public async Task<IActionResult> Deletar(Guid id, CancellationToken cancellationToken)
     {

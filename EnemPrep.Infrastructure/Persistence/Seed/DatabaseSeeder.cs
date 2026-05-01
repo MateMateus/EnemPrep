@@ -101,15 +101,23 @@ public static class DatabaseSeeder
             await context.SaveChangesAsync();
         }
 
-        if (!await context.Conquistas.AnyAsync())
+        var conquistas = new List<Conquista>
         {
-            var conquistas = new List<Conquista>
+            new("Primeiro Passo", "Resolva seu primeiro simulado no app.", "fa-solid fa-medal", 100),
+            new("Estudante Ouro", "Mantenha uma ofensiva de 7 dias consecutivos.", "fa-solid fa-fire", 500),
+            new("Primeiro Acerto", "Acerte a sua primeira questão no banco de questões.", "fa-solid fa-star", 100),
+            new("Iniciante Brilhante", "Alcance a marca de 10 questões certas.", "fa-solid fa-graduation-cap", 250),
+            new("Especialista em Treinamento", "Prove seu conhecimento com 50 questões corretas.", "fa-solid fa-trophy", 500),
+            new("Mestre Supremo", "Desbloqueie o ápice resolvendo 100 questões corretamente.", "fa-solid fa-crown", 1000)
+        };
+
+        foreach (var c in conquistas)
+        {
+            if (!await context.Conquistas.AnyAsync(x => x.Titulo == c.Titulo))
             {
-                new("Primeiro Passo", "Resolva seu primeiro simulado no app.", "fa-solid fa-medal", 100),
-                new("Estudante Ouro", "Mantenha uma ofensiva de 7 dias consecutivos.", "fa-solid fa-fire", 500)
-            };
-            await context.Conquistas.AddRangeAsync(conquistas);
-            await context.SaveChangesAsync();
+                await context.Conquistas.AddAsync(c);
+            }
         }
+        await context.SaveChangesAsync();
     }
 }

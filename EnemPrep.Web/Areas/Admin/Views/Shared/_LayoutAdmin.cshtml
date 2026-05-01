@@ -6,6 +6,8 @@
     <title>@ViewData["Title"] — Admin EnemPrep</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- Tailwind CSS (via CDN temporário para a estrutura isolada das novas views) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <style>
         body { display: flex; min-height: 100vh; flex-direction: column; }
         .admin-sidebar {
@@ -15,6 +17,35 @@
             width: 240px;
             flex-shrink: 0;
             padding: 1.5rem 0;
+            transition: transform 0.3s ease;
+        }
+        @@media (max-width: 767.98px) {
+            .admin-sidebar {
+                position: fixed;
+                z-index: 1045;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.5);
+                z-index: 1040;
+                display: none;
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+            .admin-main {
+                width: 100%;
+            }
         }
         .admin-sidebar .brand {
             padding: 0 1.5rem 1.5rem;
@@ -45,6 +76,7 @@
         .admin-main {
             flex: 1;
             background: #f8fafc;
+            min-width: 0; /* allows flex item to shrink below content size */
         }
         .admin-topbar {
             background: #fff;
@@ -56,12 +88,15 @@
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="d-flex flex-grow-1">
         <nav class="admin-sidebar">
             <div class="brand">⚡ EnemPrep Admin</div>
 
             <div class="nav-section">Conteúdo</div>
             <a class="nav-link" asp-area="Admin" asp-controller="Materias" asp-action="Index">📚 Matérias</a>
+            <a class="nav-link" asp-area="Admin" asp-controller="Livros" asp-action="Index">📖 Livros e Provas</a>
+
 
             <div class="nav-section mt-3">Navegação</div>
             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">🏠 Site Principal</a>
@@ -69,7 +104,12 @@
 
         <div class="admin-main d-flex flex-column w-100">
             <div class="admin-topbar d-flex align-items-center justify-content-between">
-                <span class="fw-semibold text-secondary">@ViewData["Title"]</span>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle" type="button">
+                        ☰
+                    </button>
+                    <span class="fw-semibold text-secondary text-truncate" style="max-width: 200px;">@ViewData["Title"]</span>
+                </div>
                 <span class="badge bg-warning text-dark">Admin</span>
             </div>
             <div class="admin-content">
@@ -95,6 +135,21 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.admin-sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+
+            if (toggle) toggle.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

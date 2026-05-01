@@ -55,4 +55,11 @@ public class SimuladoRepository : ISimuladoRepository
     {
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task RemoverVinculosPelaQuestaoAsync(Guid questaoId, CancellationToken cancellationToken = default)
+    {
+        await _context.Set<SimuladoQuestao>()
+            .Where(sq => sq.QuestaoId == questaoId)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
 }

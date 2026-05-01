@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.Extensions.Caching.Memory;
 using EnemPrep.Web.Models.Shared;
 
 namespace EnemPrep.Web.ApiClients;
@@ -12,14 +13,20 @@ public interface IMateriaApiClient
     Task<bool> DeletarAsync(Guid id, CancellationToken ct = default);
 }
 
-public class MateriaApiClient(HttpClient http) : IMateriaApiClient
+public class MateriaApiClient(HttpClient http, IMemoryCache cache) : IMateriaApiClient
 {
     public async Task<List<MateriaViewModel>> GetAllAsync(CancellationToken ct = default)
     {
+        if (cache.TryGetValue("Cache_Materias", out List<MateriaViewModel>? cachedData))
+            return cachedData!;
+
         try
         {
             var response = await http.GetFromJsonAsync<ApiResponse<List<MateriaViewModel>>>("api/materias", ct);
-            return response?.Data ?? [];
+            var data = response?.Data ?? [];
+            if (data.Any())
+                cache.Set("Cache_Materias", data, TimeSpan.FromMinutes(30));
+            return data;
         }
         catch { return []; }
     }
@@ -39,18 +46,21 @@ public class MateriaApiClient(HttpClient http) : IMateriaApiClient
         var httpResponse = await http.PostAsJsonAsync("api/materias", new { Nome = nome, Descricao = descricao }, ct);
         if (!httpResponse.IsSuccessStatusCode) return null;
         var response = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<MateriaViewModel>>(ct);
+        cache.Remove("Cache_Materias");
         return response?.Data;
     }
 
     public async Task<bool> AtualizarAsync(Guid id, string nome, string? descricao, CancellationToken ct = default)
     {
         var httpResponse = await http.PutAsJsonAsync($"api/materias/{id}", new { Nome = nome, Descricao = descricao }, ct);
+        if (httpResponse.IsSuccessStatusCode) cache.Remove("Cache_Materias");
         return httpResponse.IsSuccessStatusCode;
     }
 
     public async Task<bool> DeletarAsync(Guid id, CancellationToken ct = default)
     {
         var httpResponse = await http.DeleteAsync($"api/materias/{id}", ct);
+        if (httpResponse.IsSuccessStatusCode) cache.Remove("Cache_Materias");
         return httpResponse.IsSuccessStatusCode;
     }
 }

@@ -28,7 +28,7 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
             .HasMaxLength(500);
 
         builder.Property(u => u.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(u => u.PerfilUsuario)
             .WithMany(p => p.Usuarios)

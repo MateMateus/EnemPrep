@@ -119,20 +119,32 @@ public class PlanosEstudoController : Controller
 
     private PlanoEstudoViewModel MapearParaViewModel(PlanoEstudoViewModel dto)
     {
+        var itensViewModel = dto.Itens.Select(i => new PlanoEstudoItemViewModel
+        {
+            Id = i.Id,
+            AssuntoId = i.AssuntoId,
+            NomeAssunto = i.NomeAssunto,
+            DataPrevista = i.DataPrevista,
+            Status = i.Status
+        }).OrderBy(i => i.DataPrevista).ToList();
+
+        var agenda = itensViewModel
+            .GroupBy(i => i.DataPrevista.Date)
+            .OrderBy(g => g.Key)
+            .Select(g => new AgendaDiaViewModel
+            {
+                Data = g.Key,
+                Itens = g.ToList()
+            }).ToList();
+
         return new PlanoEstudoViewModel
         {
             Id = dto.Id,
             Titulo = dto.Titulo,
             DataInicio = dto.DataInicio,
             DataFim = dto.DataFim,
-            Itens = dto.Itens.Select(i => new PlanoEstudoItemViewModel
-            {
-                Id = i.Id,
-                AssuntoId = i.AssuntoId,
-                NomeAssunto = i.NomeAssunto,
-                DataPrevista = i.DataPrevista,
-                Status = i.Status
-            }).OrderBy(i => i.DataPrevista).ToList()
+            Itens = itensViewModel,
+            Agenda = agenda
         };
     }
 

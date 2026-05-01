@@ -23,7 +23,7 @@ public class DesafioDiarioConfiguration : IEntityTypeConfiguration<DesafioDiario
             .IsRequired();
 
         builder.Property(d => d.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(d => d.Questao)
             .WithMany()

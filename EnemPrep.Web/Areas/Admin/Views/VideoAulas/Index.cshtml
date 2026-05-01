@@ -1,4 +1,4 @@
-@model List<EnemPrep.Web.Models.Shared.VideoAulaViewModel>
+@model EnemPrep.Web.Models.Shared.PagedResult<EnemPrep.Web.Models.Shared.VideoAulaViewModel>
 
 @{
     ViewData["Title"] = "Videoaulas";
@@ -10,14 +10,14 @@
     <a asp-action="Criar" asp-route-assuntoId="@assuntoId" class="btn btn-primary">+ Nova Videoaula</a>
 </div>
 
-@if (!Model.Any())
+@if (!Model.Items.Any())
 {
     <div class="alert alert-info">Nenhuma videoaula cadastrada para este assunto.</div>
 }
 else
 {
     <div class="row g-3">
-        @foreach (var v in Model)
+        @foreach (var v in Model.Items)
         {
             <div class="col-md-6">
                 <div class="card shadow-sm h-100">

@@ -5,17 +5,17 @@ namespace EnemPrep.Web.ApiClients;
 
 public interface IVideoAulaApiClient
 {
-    Task<List<VideoAulaViewModel>> GetByAssuntoAsync(Guid assuntoId, CancellationToken ct = default);
+    Task<PagedResult<VideoAulaViewModel>> GetByAssuntoAsync(Guid assuntoId, int page = 1, int pageSize = 10, CancellationToken ct = default);
     Task<VideoAulaViewModel?> CriarAsync(string titulo, string urlVideo, int duracaoSegundos, Guid assuntoId, CancellationToken ct = default);
     Task<bool> DeletarAsync(Guid id, CancellationToken ct = default);
 }
 
 public class VideoAulaApiClient(HttpClient http) : IVideoAulaApiClient
 {
-    public async Task<List<VideoAulaViewModel>> GetByAssuntoAsync(Guid assuntoId, CancellationToken ct = default)
+    public async Task<PagedResult<VideoAulaViewModel>> GetByAssuntoAsync(Guid assuntoId, int page = 1, int pageSize = 10, CancellationToken ct = default)
     {
-        var response = await http.GetFromJsonAsync<ApiResponse<List<VideoAulaViewModel>>>($"api/assuntos/{assuntoId}/videoaulas", ct);
-        return response?.Data ?? [];
+        var response = await http.GetFromJsonAsync<ApiResponse<PagedResult<VideoAulaViewModel>>>($"api/assuntos/{assuntoId}/videoaulas?page={page}&pageSize={pageSize}", ct);
+        return response?.Data ?? new PagedResult<VideoAulaViewModel>([], 0, page, pageSize);
     }
 
     public async Task<VideoAulaViewModel?> CriarAsync(

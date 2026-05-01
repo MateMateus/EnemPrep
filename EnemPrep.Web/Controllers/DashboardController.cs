@@ -13,27 +13,24 @@ public class DashboardController(
     {
         var usuarioIdStr = HttpContext.Session.GetString("UsuarioId");
         if (string.IsNullOrEmpty(usuarioIdStr) || !Guid.TryParse(usuarioIdStr, out var usuarioId))
+        {
+            HttpContext.Session.Clear();
             return RedirectToAction("Login", "Auth");
+        }
 
         var dashboard = await dashboardClient.GetDashboardAsync(usuarioId, ct);
         if (dashboard is null)
-            return RedirectToAction("Index", "Home");
+        {
+            // Limpa a sessão para quebrar qualquer loop de redirecionamento.
+            // Se a API falhou (token expirado, indisponível, etc.), o usuário
+            // deve ver a tela de login, não ficar preso num loop.
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Auth");
+        }
 
-        var streak = await gamificacaoClient.GetStreakAsync(ct);
         var desafio = await gamificacaoClient.GetDesafioDiarioAsync(ct);
 
         dashboard.NomeUsuario = HttpContext.Session.GetString("UsuarioNome") ?? "Estudante";
-
-        if (streak is null)
-        {
-            dashboard.StreakAtual = 0;
-            dashboard.MaiorStreak = 0;
-        }
-        else
-        {
-            dashboard.StreakAtual = streak.DiasConsecutivos;
-            dashboard.MaiorStreak = streak.MaiorStreak;
-        }
 
         dashboard.DesafioDiario = desafio;
 

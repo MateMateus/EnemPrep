@@ -1,6 +1,7 @@
 using EnemPrep.Api.Extensions;
 using EnemPrep.Application.DTOs.Materias;
 using EnemPrep.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Api.Controllers;
@@ -35,6 +36,7 @@ public class MateriasController : ControllerBase
         return Ok(ApiResponse<MateriaComAssuntosDto>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Criar([FromBody] CriarMateriaRequest request, CancellationToken cancellationToken)
     {
@@ -46,6 +48,7 @@ public class MateriasController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, ApiResponse<MateriaDto>.Ok(result.Data!));
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarMateriaRequest request, CancellationToken cancellationToken)
     {
@@ -57,6 +60,7 @@ public class MateriasController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Deletar(Guid id, CancellationToken cancellationToken)
     {

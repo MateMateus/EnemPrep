@@ -20,7 +20,7 @@ public class MateriaConfiguration : IEntityTypeConfiguration<Materia>
             .HasMaxLength(1000);
 
         builder.Property(m => m.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasMany(m => m.Assuntos)
             .WithOne(a => a.Materia)

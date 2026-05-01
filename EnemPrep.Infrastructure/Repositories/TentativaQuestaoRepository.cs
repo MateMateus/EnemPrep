@@ -32,23 +32,36 @@ public class TentativaQuestaoRepository : ITentativaQuestaoRepository
     public async Task<(int TotalRespondidas, int TotalAcertos)> GetEstatisticasPorAssuntoAsync(
         Guid usuarioId, Guid assuntoId, CancellationToken cancellationToken = default)
     {
-        var tentativas = await _context.TentativasQuestao
+        // Projecao no SQL — evita carregar objetos de Questao na memoria
+        var query = _context.TentativasQuestao
             .AsNoTracking()
-            .Include(t => t.Questao)
-            .Where(t => t.UsuarioId == usuarioId && t.Questao.AssuntoId == assuntoId)
-            .ToListAsync(cancellationToken);
+            .Where(t => t.UsuarioId == usuarioId && t.Questao.AssuntoId == assuntoId);
 
-        return (tentativas.Count, tentativas.Count(t => t.Acertou));
+        var total = await query.CountAsync(cancellationToken);
+        var acertos = await query.CountAsync(t => t.Acertou, cancellationToken);
+
+        return (total, acertos);
     }
 
     public async Task<(int TotalRespondidas, int TotalAcertos)> GetEstatisticasGeraisAsync(
         Guid usuarioId, CancellationToken cancellationToken = default)
     {
-        var tentativas = await _context.TentativasQuestao
+        // Projecao no SQL — nunca carrega todos os registros na memoria
+        var query = _context.TentativasQuestao
             .AsNoTracking()
-            .Where(t => t.UsuarioId == usuarioId)
-            .ToListAsync(cancellationToken);
+            .Where(t => t.UsuarioId == usuarioId);
 
-        return (tentativas.Count, tentativas.Count(t => t.Acertou));
+        var total = await query.CountAsync(cancellationToken);
+        var acertos = await query.CountAsync(t => t.Acertou, cancellationToken);
+
+        return (total, acertos);
+    }
+
+    public async Task DeleteByQuestaoIdAsync(Guid questaoId, CancellationToken cancellationToken = default)
+    {
+        // ExecuteDeleteAsync: DELETE direto no SQL sem carregar entidades na memoria
+        await _context.TentativasQuestao
+            .Where(t => t.QuestaoId == questaoId)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

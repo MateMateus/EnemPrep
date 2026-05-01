@@ -16,7 +16,7 @@ public class UsuarioConquistaConfiguration : IEntityTypeConfiguration<UsuarioCon
             .IsRequired();
 
         builder.Property(uc => uc.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasIndex(uc => new { uc.UsuarioId, uc.ConquistaId })
             .IsUnique();

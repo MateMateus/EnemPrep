@@ -20,7 +20,7 @@ public class AssuntoConfiguration : IEntityTypeConfiguration<Assunto>
             .HasMaxLength(1000);
 
         builder.Property(a => a.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasMany(a => a.Questoes)
             .WithOne(q => q.Assunto)
@@ -32,13 +32,8 @@ public class AssuntoConfiguration : IEntityTypeConfiguration<Assunto>
             .HasForeignKey(v => v.AssuntoId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(a => a.MateriaisEstudo)
-            .WithOne(m => m.Assunto)
-            .HasForeignKey(m => m.AssuntoId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(a => a.Questoes).HasField("_questoes");
         builder.Navigation(a => a.VideoAulas).HasField("_videoAulas");
-        builder.Navigation(a => a.MateriaisEstudo).HasField("_materiaisEstudo");
     }
 }

@@ -1,10 +1,12 @@
 using EnemPrep.Web.ApiClients;
 using EnemPrep.Web.Areas.Admin.ViewModels.Assuntos;
+using EnemPrep.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[VerificaSessaoAdmin]
 public class AssuntosController(IAssuntoApiClient assuntoClient, IMateriaApiClient materiaClient) : Controller
 {
     public async Task<IActionResult> Index(Guid materiaId, CancellationToken ct)

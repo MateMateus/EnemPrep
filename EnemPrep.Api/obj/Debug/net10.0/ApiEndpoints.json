@@ -1,0 +1,1038 @@
+[
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.AssuntosController",
+    "Method": "Criar",
+    "RelativePath": "api/assuntos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Materias.CriarAssuntoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "GetByAssunto",
+    "RelativePath": "api/assuntos/{assuntoId}/questoes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assuntoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.VideoAulasController",
+    "Method": "GetByAssunto",
+    "RelativePath": "api/assuntos/{assuntoId}/videoaulas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "assuntoId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.AssuntosController",
+    "Method": "Atualizar",
+    "RelativePath": "api/assuntos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Materias.CriarAssuntoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.AssuntosController",
+    "Method": "Deletar",
+    "RelativePath": "api/assuntos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Auth.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "api/auth/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Auth.RegisterRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.DashboardController",
+    "Method": "GetDashboard",
+    "RelativePath": "api/dashboard/{usuarioId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.GamificacaoController",
+    "Method": "GetConquistas",
+    "RelativePath": "api/gamificacao/conquistas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.GamificacaoController",
+    "Method": "GetDesafioDiario",
+    "RelativePath": "api/gamificacao/desafio-diario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.GamificacaoController",
+    "Method": "GetStreak",
+    "RelativePath": "api/gamificacao/streak",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "GetAll",
+    "RelativePath": "api/livros",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "busca",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "materiaId",
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "tipo",
+        "Type": "System.Nullable\u00601[[EnemPrep.Domain.Enums.TipoConteudo, EnemPrep.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "Criar",
+    "RelativePath": "api/livros",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "titulo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "descricao",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "materiaId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "tipoConteudo",
+        "Type": "EnemPrep.Domain.Enums.TipoConteudo",
+        "IsRequired": false
+      },
+      {
+        "Name": "urlCapaExistente",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "GetById",
+    "RelativePath": "api/livros/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "Atualizar",
+    "RelativePath": "api/livros/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "titulo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "descricao",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "materiaId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "tipoConteudo",
+        "Type": "EnemPrep.Domain.Enums.TipoConteudo",
+        "IsRequired": false
+      },
+      {
+        "Name": "urlCapaExistente",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "Deletar",
+    "RelativePath": "api/livros/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "AdicionarPaginas",
+    "RelativePath": "api/livros/{livroId}/paginas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "livroId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Livros.AdicionarPaginasRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "RemoverPagina",
+    "RelativePath": "api/livros/{livroId}/paginas/{paginaId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "livroId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "paginaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "UploadPdf",
+    "RelativePath": "api/livros/{livroId}/paginas/upload",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "livroId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "CriarTema",
+    "RelativePath": "api/livros/{livroId}/temas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "livroId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Livros.CriarTemaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "AtualizarTema",
+    "RelativePath": "api/livros/{livroId}/temas/{temaId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "livroId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "temaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Livros.CriarTemaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.LivrosController",
+    "Method": "DeletarTema",
+    "RelativePath": "api/livros/{livroId}/temas/{temaId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "livroId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "temaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.MateriasController",
+    "Method": "GetAll",
+    "RelativePath": "api/materias",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.MateriasController",
+    "Method": "Criar",
+    "RelativePath": "api/materias",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Materias.CriarMateriaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.MateriasController",
+    "Method": "GetById",
+    "RelativePath": "api/materias/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.MateriasController",
+    "Method": "Atualizar",
+    "RelativePath": "api/materias/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Materias.AtualizarMateriaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.MateriasController",
+    "Method": "Deletar",
+    "RelativePath": "api/materias/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.AssuntosController",
+    "Method": "GetByMateria",
+    "RelativePath": "api/materias/{materiaId}/assuntos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "materiaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PerfilController",
+    "Method": "GetPerfil",
+    "RelativePath": "api/perfil/{usuarioId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PerfilController",
+    "Method": "AtualizarEmail",
+    "RelativePath": "api/perfil/{usuarioId}/email",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Api.Controllers.AtualizarEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PerfilController",
+    "Method": "AtualizarNome",
+    "RelativePath": "api/perfil/{usuarioId}/nome",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Api.Controllers.AtualizarNomeRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PerfilController",
+    "Method": "AtualizarSenha",
+    "RelativePath": "api/perfil/{usuarioId}/senha",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Api.Controllers.AtualizarSenhaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PlanosEstudoController",
+    "Method": "Criar",
+    "RelativePath": "api/planos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "X-Usuario-Id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.PlanoEstudo.CriarPlanoEstudoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PlanosEstudoController",
+    "Method": "GetById",
+    "RelativePath": "api/planos/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PlanosEstudoController",
+    "Method": "Deletar",
+    "RelativePath": "api/planos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PlanosEstudoController",
+    "Method": "AtualizarStatusItem",
+    "RelativePath": "api/planos/itens/{itemId}/status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itemId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.PlanoEstudo.AtualizarStatusPlanoItemRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "Criar",
+    "RelativePath": "api/questoes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Questoes.CriarQuestaoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "GetById",
+    "RelativePath": "api/questoes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "Atualizar",
+    "RelativePath": "api/questoes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Questoes.AtualizarQuestaoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "Deletar",
+    "RelativePath": "api/questoes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "Responder",
+    "RelativePath": "api/questoes/responder",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "X-Usuario-Id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Questoes.ResponderQuestaoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "GetHistorico",
+    "RelativePath": "api/questoes/tentativas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "X-Usuario-Id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.SimuladosController",
+    "Method": "GetSimuladosDisponiveis",
+    "RelativePath": "api/Simulados",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.SimuladosController",
+    "Method": "GetById",
+    "RelativePath": "api/Simulados/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.SimuladosController",
+    "Method": "GetHistorico",
+    "RelativePath": "api/Simulados/historico",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "X-Usuario-Id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.SimuladosController",
+    "Method": "Iniciar",
+    "RelativePath": "api/Simulados/iniciar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "X-Usuario-Id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Simulados.IniciarSimuladoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.SimuladosController",
+    "Method": "Submeter",
+    "RelativePath": "api/Simulados/tentativas/{tentativaId}/submeter",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "X-Usuario-Id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "tentativaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.Simulados.SubmeterSimuladoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.QuestoesController",
+    "Method": "GetByTema",
+    "RelativePath": "api/temas/{temaId}/questoes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "temaId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "PageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "PageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.PlanosEstudoController",
+    "Method": "GetByUsuario",
+    "RelativePath": "api/usuarios/{usuarioId}/planos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.VideoAulasController",
+    "Method": "Criar",
+    "RelativePath": "api/videoaulas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "EnemPrep.Application.DTOs.VideoAulas.CriarVideoAulaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnemPrep.Api.Controllers.VideoAulasController",
+    "Method": "Deletar",
+    "RelativePath": "api/videoaulas/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

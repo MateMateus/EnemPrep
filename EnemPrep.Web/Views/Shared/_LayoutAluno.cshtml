@@ -8,11 +8,21 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <!-- Tailwind CSS (via CDN temporário para a estrutura inicial, sem quebrar o projeto existente) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <!-- Marked.js for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- MathJax for LaTeX -->
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         .htmx-indicator {
             display: none;
@@ -28,10 +38,16 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 antialiased font-sans flex h-screen overflow-hidden">
+<body x-data="{ mobileMenuOpen: false }" class="bg-gray-50 text-gray-800 antialiased font-sans flex h-screen overflow-hidden">
+
+    <!-- Overlay/Backdrop for Mobile Menu -->
+    <div x-show="mobileMenuOpen" 
+         x-transition.opacity 
+         class="fixed inset-0 bg-black/50 z-40 md:hidden" 
+         @@click="mobileMenuOpen = false" x-cloak></div>
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-indigo-700 text-white flex flex-col hidden md:flex">
+    <aside :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'" class="w-64 bg-indigo-700 text-white flex flex-col fixed inset-y-0 left-0 z-50 transform md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div class="h-16 flex items-center justify-center border-b border-indigo-800 font-bold text-xl tracking-wider">
             EnemPrep
         </div>
@@ -41,11 +57,10 @@
             <a href="/cronograma" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">📅
                 Cronograma</a>
             <a href="/materias" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">📚 Matérias</a>
+            <a href="/livros" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">📖 Livros e Provas</a>
             <a href="/questoes" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">🎯 Questões</a>
             <a href="/questoes/historico" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">⏱️
                 Histórico</a>
-            <a href="/conquistas" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">🏅
-                Conquistas</a>
             <a href="/perfil" class="block px-3 py-2 rounded-md hover:bg-indigo-600 transition-colors">👤 Meu Perfil</a>
             @if (Context.Session.GetString("TipoPerfil") == "Administrador")
             {
@@ -63,8 +78,16 @@
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden">
         <!-- Top Header -->
-        <header class="h-16 bg-white shadow flex items-center justify-between px-6 z-10">
-            <div class="text-xl font-semibold text-gray-800">@ViewData["Title"]</div>
+        <header class="h-16 bg-white shadow flex items-center justify-between px-4 sm:px-6 z-10 shrink-0">
+            <div class="flex items-center gap-3">
+                <button @@click="mobileMenuOpen = !mobileMenuOpen" type="button" class="md:hidden p-2 -ml-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none">
+                    <span class="sr-only">Abrir menu principal</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="text-lg sm:text-xl font-semibold text-gray-800 truncate max-w-[200px] sm:max-w-none">@ViewData["Title"]</div>
+            </div>
             <div class="flex items-center space-x-4">
                 @{
                     var nomeUsuario = Context.Session.GetString("NomeUsuario") ?? "Olá, Visitante";
@@ -74,7 +97,7 @@
         </header>
 
         <!-- Main Body -->
-        <main class="flex-1 overflow-auto bg-gray-50 p-6">
+        <main class="flex-1 overflow-auto bg-gray-50 p-4 sm:p-6">
             @if (TempData["Erro"] != null)
             {
                 <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">

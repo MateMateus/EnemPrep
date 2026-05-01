@@ -21,7 +21,7 @@ public class PlanoEstudoItemConfiguration : IEntityTypeConfiguration<PlanoEstudo
             .HasMaxLength(50);
 
         builder.Property(i => i.DataCriacao)
-            .HasDefaultValueSql("GETUTCDATE()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(i => i.Assunto)
             .WithMany()

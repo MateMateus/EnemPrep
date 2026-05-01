@@ -7,7 +7,11 @@ public class CriarQuestaoViewModel
     [Required]
     public Guid AssuntoId { get; set; }
 
-    public string AssuntoNome { get; set; } = string.Empty;
+    public string? AssuntoNome { get; set; }
+
+    public Guid? LivroId { get; set; }
+    public Guid? LivroTemaId { get; set; }
+
 
     [Required(ErrorMessage = "Enunciado é obrigatório")]
     [StringLength(2000, MinimumLength = 10, ErrorMessage = "Enunciado deve ter entre 10 e 2000 caracteres")]
@@ -18,6 +22,9 @@ public class CriarQuestaoViewModel
 
     [StringLength(1000)]
     public string? Explicacao { get; set; }
+
+    [StringLength(500)]
+    public string? VideoExplicacaoUrl { get; set; }
 
     [Required]
     [MinLength(2, ErrorMessage = "Questão precisa ter ao menos 2 alternativas")]

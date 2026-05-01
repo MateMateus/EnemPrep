@@ -1,0 +1,13 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/.agent
+**/node_modules
+**/.gitignore
+**/.testsprite
+**/ApiTester
+**/enemprep_etapas_md_rigido
+*.md
+*.user
+*.sln.user

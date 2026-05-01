@@ -12,9 +12,22 @@ public static class InfrastructureServiceRegistration
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<EnemPrepDbContext>(options =>
-            options.UseSqlServer(
+        {
+            options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection"),
-                sqlOptions => sqlOptions.MigrationsAssembly(typeof(EnemPrepDbContext).Assembly.FullName)));
+                npgsqlOptions => npgsqlOptions.MigrationsAssembly(typeof(EnemPrepDbContext).Assembly.FullName));
+
+            // SEGURANCA: nunca logar valores de parâmetros (senhas, emails, tokens)
+            // mesmo que o nível de log esteja muito verboso
+            options.EnableSensitiveDataLogging(false);
+
+            // Erros detalhados apenas em desenvolvimento
+            var isDevelopment = configuration["ASPNETCORE_ENVIRONMENT"] == "Development";
+            if (isDevelopment)
+            {
+                options.EnableDetailedErrors(true);
+            }
+        });
 
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IMateriaRepository, MateriaRepository>();
@@ -22,7 +35,6 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IQuestaoRepository, QuestaoRepository>();
         services.AddScoped<ITentativaQuestaoRepository, TentativaQuestaoRepository>();
         services.AddScoped<IVideoAulaRepository, VideoAulaRepository>();
-        services.AddScoped<IMaterialEstudoRepository, MaterialEstudoRepository>();
         services.AddScoped<IPlanoEstudoRepository, PlanoEstudoRepository>();
         services.AddScoped<IStreakUsuarioRepository, StreakUsuarioRepository>();
         services.AddScoped<IDesafioDiarioRepository, DesafioDiarioRepository>();
@@ -30,6 +42,20 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IUsuarioConquistaRepository, UsuarioConquistaRepository>();
         services.AddScoped<ISimuladoRepository, SimuladoRepository>();
         services.AddScoped<ITentativaSimuladoRepository, TentativaSimuladoRepository>();
+        services.AddScoped<ILivroRepository, LivroRepository>();
+
+        // Storage: Supabase em produção, local em desenvolvimento
+        var supabaseUrl = configuration["Supabase:Url"];
+        var isSupabaseConfigured = !string.IsNullOrEmpty(supabaseUrl)
+                                   && !supabaseUrl.Contains("VIA_ENV_VAR");
+
+        if (isSupabaseConfigured)
+            services.AddHttpClient<EnemPrep.Application.Interfaces.IFileStorageService, EnemPrep.Infrastructure.Services.SupabaseStorageService>();
+        else
+            services.AddScoped<EnemPrep.Application.Interfaces.IFileStorageService, EnemPrep.Infrastructure.Services.LocalFileStorageService>();
+
+        services.AddScoped<EnemPrep.Application.Interfaces.IPdfProcessorService, EnemPrep.Infrastructure.Services.PdfProcessorService>();
         return services;
+
     }
 }

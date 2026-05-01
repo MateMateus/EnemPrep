@@ -8,6 +8,14 @@ html {
   }
 }
 
+/* Garante tamanho mínimo de toque (Touch Target) de 44px em mobile */
+@media (max-width: 767.98px) {
+  .btn, .form-control, .form-select, 
+  button, input[type="text"], input[type="email"], input[type="password"], input[type="number"], a.btn {
+    min-height: 44px;
+  }
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
