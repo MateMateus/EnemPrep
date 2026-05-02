@@ -122,4 +122,32 @@ public class GamificacaoService : IGamificacaoService
             // Pelo escopo minimalista, daremos por concluído via GetDesafioDiarioAsync conferindo a tentativa.
         }
     }
+    public async Task VerificarConquistasPorQuestoesAsync(Guid usuarioId, CancellationToken cancellationToken = default)
+    {
+        var tentativas = await _tentativaRepository.GetByUsuarioIdAsync(usuarioId, cancellationToken);
+        var acertosCount = tentativas.Count(t => t.Acertou);
+
+        var todasConquistas = await _conquistaRepository.GetAllAsync(cancellationToken);
+        var conquistasDoUsuario = await _usuarioConquistaRepository.GetByUsuarioIdAsync(usuarioId, cancellationToken);
+        var conquistasDesbloqueadasNomes = conquistasDoUsuario
+            .Select(uc => todasConquistas.FirstOrDefault(c => c.Id == uc.ConquistaId)?.Titulo)
+            .Where(titulo => titulo != null)
+            .ToHashSet();
+
+        async Task DesbloquearSeNaoExistir(string tituloRequerido)
+        {
+            if (conquistasDesbloqueadasNomes.Contains(tituloRequerido)) return;
+            var conquista = todasConquistas.FirstOrDefault(c => c.Titulo == tituloRequerido);
+            if (conquista is not null)
+            {
+                var novaConquista = new UsuarioConquista(usuarioId, conquista.Id);
+                await _usuarioConquistaRepository.AddAsync(novaConquista, cancellationToken);
+            }
+        }
+
+        if (acertosCount >= 1) await DesbloquearSeNaoExistir("Primeiro Acerto");
+        if (acertosCount >= 10) await DesbloquearSeNaoExistir("Iniciante Brilhante");
+        if (acertosCount >= 50) await DesbloquearSeNaoExistir("Especialista em Treinamento");
+        if (acertosCount >= 100) await DesbloquearSeNaoExistir("Mestre Supremo");
+    }
 }

@@ -1,0 +1,16 @@
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\bin\Debug\net10.0\EnemPrep.Application.deps.json
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\bin\Debug\net10.0\EnemPrep.Application.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\bin\Debug\net10.0\EnemPrep.Application.pdb
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\bin\Debug\net10.0\EnemPrep.Domain.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\bin\Debug\net10.0\EnemPrep.Domain.pdb
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.csproj.AssemblyReference.cache
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.AssemblyInfoInputs.cache
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.AssemblyInfo.cs
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.csproj.CoreCompileInputs.cache
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.sourcelink.json
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.03171000.Up2Date
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\refint\EnemPrep.Application.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\EnemPrep.Application.pdb
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Application\obj\Debug\net10.0\ref\EnemPrep.Application.dll

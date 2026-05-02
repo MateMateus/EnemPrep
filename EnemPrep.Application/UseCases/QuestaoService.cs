@@ -43,9 +43,22 @@ public class QuestaoService : IQuestaoService
         return Result<PagedResult<QuestaoDto>>.Ok(pagedResult);
     }
 
+    public async Task<Result<PagedResult<QuestaoDto>>> GetPagedByTemaAsync(Guid temaId, PagedRequest request, CancellationToken cancellationToken)
+    {
+        var (items, totalCount) = await _questaoRepository.GetPagedByTemaAsync(
+            temaId, request.PageNumber, request.PageSize, cancellationToken);
+
+        var dtos = items.Select(MapToDto).ToList();
+
+        var pagedResult = new PagedResult<QuestaoDto>(dtos, totalCount, request.PageNumber, request.PageSize);
+        return Result<PagedResult<QuestaoDto>>.Ok(pagedResult);
+    }
+
+
     public async Task<Result<QuestaoDto>> CriarAsync(CriarQuestaoRequest request, CancellationToken cancellationToken)
     {
-        var questao = new Questao(request.Enunciado, request.Dificuldade, request.AssuntoId, request.Explicacao);
+        var questao = new Questao(request.Enunciado, request.Dificuldade, request.AssuntoId, request.Explicacao, request.VideoExplicacaoUrl);
+        questao.VincularAoLivro(request.LivroId, request.LivroTemaId);
 
         foreach (var alt in request.Alternativas)
         {
@@ -55,6 +68,19 @@ public class QuestaoService : IQuestaoService
 
         await _questaoRepository.AddAsync(questao, cancellationToken);
 
+        return Result<QuestaoDto>.Ok(MapToDto(questao));
+    }
+
+    public async Task<Result<QuestaoDto>> AtualizarAsync(Guid id, AtualizarQuestaoRequest request, CancellationToken cancellationToken)
+    {
+        var questao = await _questaoRepository.GetByIdTrackingAsync(id, cancellationToken);
+        if (questao is null) return Result<QuestaoDto>.Fail("Questão não encontrada.");
+
+        questao.Atualizar(request.Enunciado, request.Dificuldade, request.Explicacao, request.VideoExplicacaoUrl);
+        questao.VincularAoLivro(request.LivroId, request.LivroTemaId);
+        questao.SincronizarAlternativas(request.Alternativas.Select(a => (a.Texto, a.Correta)));
+
+        await _questaoRepository.UpdateAsync(questao, cancellationToken);
         return Result<QuestaoDto>.Ok(MapToDto(questao));
     }
 
@@ -83,6 +109,7 @@ public class QuestaoService : IQuestaoService
         // Dispara gatilhos da gamificação baseados na resolução da questão
         await _gamificacaoService.RegistrarAtividadeDiariaAsync(usuarioId, cancellationToken);
         await _gamificacaoService.VerificarEAtualizarDesafioDiarioAsync(usuarioId, request.QuestaoId, acertou, cancellationToken);
+        await _gamificacaoService.VerificarConquistasPorQuestoesAsync(usuarioId, cancellationToken);
 
         return Result<ResultadoQuestaoDto>.Ok(
             new ResultadoQuestaoDto(acertou, alternativaCorreta.Id, questao.Explicacao));
@@ -111,6 +138,10 @@ public class QuestaoService : IQuestaoService
         if (questao is null)
             return Result.Fail("Questão não encontrada.");
 
+        // Remove todas as tentativas associadas antes de excluir a questão
+        // evitando conflito de chave estrangeira (FK)
+        await _tentativaRepository.DeleteByQuestaoIdAsync(questao.Id, cancellationToken);
+
         await _questaoRepository.DeleteAsync(questao, cancellationToken);
 
         return Result.Ok();
@@ -129,6 +160,9 @@ public class QuestaoService : IQuestaoService
             q.AssuntoId,
             q.Assunto?.Nome ?? string.Empty,
             q.Explicacao,
-            alternativas);
+            q.VideoExplicacaoUrl,
+            alternativas,
+            q.LivroId,
+            q.LivroTemaId);
     }
 }

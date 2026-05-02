@@ -14,11 +14,11 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IAssuntoService, AssuntoService>();
         services.AddScoped<IQuestaoService, QuestaoService>();
         services.AddScoped<IVideoAulaService, VideoAulaService>();
-        services.AddScoped<IMaterialEstudoService, MaterialEstudoService>();
         services.AddScoped<IPlanoEstudoService, PlanoEstudoService>();
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IGamificacaoService, GamificacaoService>();
         services.AddScoped<ISimuladoService, SimuladoService>();
+        services.AddScoped<ILivroService, LivroService>();
 
         return services;
     }

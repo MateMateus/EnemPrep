@@ -8,4 +8,5 @@ public interface ITentativaQuestaoRepository
     Task<IReadOnlyList<TentativaQuestao>> GetByUsuarioIdAsync(Guid usuarioId, CancellationToken cancellationToken = default);
     Task<(int TotalRespondidas, int TotalAcertos)> GetEstatisticasPorAssuntoAsync(Guid usuarioId, Guid assuntoId, CancellationToken cancellationToken = default);
     Task<(int TotalRespondidas, int TotalAcertos)> GetEstatisticasGeraisAsync(Guid usuarioId, CancellationToken cancellationToken = default);
+    Task DeleteByQuestaoIdAsync(Guid questaoId, CancellationToken cancellationToken = default);
 }

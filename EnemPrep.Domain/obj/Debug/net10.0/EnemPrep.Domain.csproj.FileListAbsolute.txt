@@ -1,0 +1,12 @@
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\bin\Debug\net10.0\EnemPrep.Domain.deps.json
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\bin\Debug\net10.0\EnemPrep.Domain.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\bin\Debug\net10.0\EnemPrep.Domain.pdb
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.AssemblyInfoInputs.cache
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.AssemblyInfo.cs
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.sourcelink.json
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\refint\EnemPrep.Domain.dll
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\EnemPrep.Domain.pdb
+C:\Users\Mateus\source\repos\EnemPrep\EnemPrep.Domain\obj\Debug\net10.0\ref\EnemPrep.Domain.dll

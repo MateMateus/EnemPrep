@@ -9,5 +9,9 @@ public record QuestaoDto(
     Guid AssuntoId,
     string NomeAssunto,
     string? Explicacao,
-    IReadOnlyList<AlternativaDto> Alternativas
+    string? VideoExplicacaoUrl,
+    IReadOnlyList<AlternativaDto> Alternativas,
+    Guid? LivroId = null,
+    Guid? LivroTemaId = null
 );
+

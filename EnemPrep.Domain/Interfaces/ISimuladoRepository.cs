@@ -9,5 +9,6 @@ public interface ISimuladoRepository
     Task<IEnumerable<Simulado>> GetAllAsync(CancellationToken cancellationToken = default);
     Task AddAsync(Simulado simulado, CancellationToken cancellationToken = default);
     void Update(Simulado simulado);
+    Task RemoverVinculosPelaQuestaoAsync(Guid questaoId, CancellationToken cancellationToken = default);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -7,5 +7,8 @@ public record CriarQuestaoRequest(
     NivelDificuldade Dificuldade,
     Guid AssuntoId,
     string? Explicacao,
-    IReadOnlyList<CriarAlternativaRequest> Alternativas
+    string? VideoExplicacaoUrl,
+    IReadOnlyList<CriarAlternativaRequest> Alternativas,
+    Guid? LivroId = null,
+    Guid? LivroTemaId = null
 );

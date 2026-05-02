@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "EnemPrep.Api\\EnemPrep.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "EnemPrep.Web\\EnemPrep.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

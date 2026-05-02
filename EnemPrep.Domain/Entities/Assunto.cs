@@ -14,14 +14,11 @@ public class Assunto : Entity
     private readonly List<VideoAula> _videoAulas;
     public IReadOnlyCollection<VideoAula> VideoAulas => _videoAulas.AsReadOnly();
 
-    private readonly List<MaterialEstudo> _materiaisEstudo;
-    public IReadOnlyCollection<MaterialEstudo> MateriaisEstudo => _materiaisEstudo.AsReadOnly();
 
     protected Assunto() 
     { 
         _questoes = new List<Questao>();
         _videoAulas = new List<VideoAula>();
-        _materiaisEstudo = new List<MaterialEstudo>();
         Nome = string.Empty;
         Descricao = string.Empty;
     }

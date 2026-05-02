@@ -9,4 +9,5 @@ public interface IAssuntoRepository
     Task AddAsync(Assunto assunto, CancellationToken cancellationToken = default);
     Task UpdateAsync(Assunto assunto, CancellationToken cancellationToken = default);
     Task DeleteAsync(Assunto assunto, CancellationToken cancellationToken = default);
+    Task DeleteByMateriaIdAsync(Guid materiaId, CancellationToken cancellationToken = default);
 }

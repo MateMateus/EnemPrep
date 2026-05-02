@@ -9,4 +9,7 @@ public interface IPlanoEstudoRepository
     Task AddAsync(PlanoEstudo plano, CancellationToken cancellationToken = default);
     Task UpdateAsync(PlanoEstudo plano, CancellationToken cancellationToken = default);
     Task DeleteAsync(PlanoEstudo plano, CancellationToken cancellationToken = default);
+
+    Task<PlanoEstudoItem?> GetItemByIdAsync(Guid itemId, CancellationToken cancellationToken = default);
+    Task UpdateItemAsync(PlanoEstudoItem item, CancellationToken cancellationToken = default);
 }

@@ -15,15 +15,15 @@ public class VideoAulaService : IVideoAulaService
         _videoAulaRepository = videoAulaRepository;
     }
 
-    public async Task<Result<IReadOnlyList<VideoAulaDto>>> GetByAssuntoIdAsync(Guid assuntoId, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<VideoAulaDto>>> GetByAssuntoIdAsync(Guid assuntoId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var videoAulas = await _videoAulaRepository.GetByAssuntoIdAsync(assuntoId, cancellationToken);
+        var result = await _videoAulaRepository.GetPagedByAssuntoIdAsync(assuntoId, pageNumber, pageSize, cancellationToken);
 
-        var dtos = videoAulas
+        var dtos = result.Items
             .Select(v => new VideoAulaDto(v.Id, v.Titulo, v.UrlVideo, v.DuracaoSegundos, v.AssuntoId, v.Assunto?.Nome ?? string.Empty))
             .ToList();
 
-        return Result<IReadOnlyList<VideoAulaDto>>.Ok(dtos);
+        return Result<PagedResult<VideoAulaDto>>.Ok(new PagedResult<VideoAulaDto>(dtos, result.TotalCount, pageNumber, pageSize));
     }
 
     public async Task<Result<VideoAulaDto>> CriarAsync(CriarVideoAulaRequest request, CancellationToken cancellationToken)

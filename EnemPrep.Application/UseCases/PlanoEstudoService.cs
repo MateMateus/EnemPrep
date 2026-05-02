@@ -40,7 +40,7 @@ public class PlanoEstudoService : IPlanoEstudoService
 
         foreach (var itemReq in request.Itens)
         {
-            var item = new PlanoEstudoItem(plano.Id, itemReq.AssuntoId, itemReq.DataPrevista);
+            plano.AdicionarItem(itemReq.AssuntoId, itemReq.DataPrevista);
         }
 
         await _planoRepository.AddAsync(plano, cancellationToken);
@@ -50,12 +50,16 @@ public class PlanoEstudoService : IPlanoEstudoService
 
     public async Task<Result> AtualizarStatusItemAsync(Guid planoEstudoItemId, AtualizarStatusPlanoItemRequest request, CancellationToken cancellationToken)
     {
-        // We need to find the plano that contains this item.
-        // For now, we'll need to search through planos - this is a known limitation
-        // that could be improved with a dedicated PlanoEstudoItem repository.
-        // As a workaround, the controller should pass the plano ID.
-        // But since the interface accepts only itemId, we handle it at repository level.
-        return Result.Fail("Funcionalidade requer repositório de PlanoEstudoItem dedicado. Pendência para próxima etapa.");
+        var item = await _planoRepository.GetItemByIdAsync(planoEstudoItemId, cancellationToken);
+        
+        if (item is null)
+            return Result.Fail("Item do plano de estudo não encontrado.");
+
+        item.AtualizarStatus(request.Status);
+        
+        await _planoRepository.UpdateItemAsync(item, cancellationToken);
+
+        return Result.Ok();
     }
 
     public async Task<Result> DeletarAsync(Guid id, CancellationToken cancellationToken)

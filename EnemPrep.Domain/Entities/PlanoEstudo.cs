@@ -29,4 +29,10 @@ public class PlanoEstudo : Entity
         DataFim = dataFim;
         UsuarioId = usuarioId;
     }
+
+    public void AdicionarItem(Guid assuntoId, DateTime dataPrevista)
+    {
+        var item = new PlanoEstudoItem(Id, assuntoId, dataPrevista);
+        _itens.Add(item);
+    }
 }

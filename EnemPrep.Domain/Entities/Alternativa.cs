@@ -22,4 +22,11 @@ public class Alternativa : Entity
         Correta = correta;
         QuestaoId = questaoId;
     }
+
+    public void Atualizar(string texto, bool correta)
+    {
+        if (string.IsNullOrWhiteSpace(texto)) throw new ArgumentException("Texto da alternativa é obrigatório.", nameof(texto));
+        Texto = texto;
+        Correta = correta;
+    }
 }
