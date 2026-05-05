@@ -23,10 +23,28 @@ app.UseExceptionHandler();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<EnemPrepDbContext>();
-    await context.Database.MigrateAsync();
-    
-    // Opcional: Só executa o Seed se for desenvolvimento, ou manter para prod
-    // await DatabaseSeeder.SeedAsync(context);
+    try
+    {
+        Console.WriteLine("=== MIGRATION START ===");
+        Console.WriteLine($"Connection: {context.Database.GetConnectionString()}");
+        
+        var pending = await context.Database.GetPendingMigrationsAsync();
+        Console.WriteLine($"Pending migrations: {string.Join(", ", pending)}");
+        
+        var applied = await context.Database.GetAppliedMigrationsAsync();
+        Console.WriteLine($"Applied migrations: {string.Join(", ", applied)}");
+        
+        await context.Database.MigrateAsync();
+        Console.WriteLine("=== MIGRATION SUCCESS ===");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"=== MIGRATION ERROR ===");
+        Console.WriteLine($"Message: {ex.Message}");
+        Console.WriteLine($"Inner: {ex.InnerException?.Message}");
+        Console.WriteLine($"StackTrace: {ex.StackTrace}");
+        throw; // re-throw para a API não arrancar com DB incompleto
+    }
 }
 
 if (app.Environment.IsDevelopment())

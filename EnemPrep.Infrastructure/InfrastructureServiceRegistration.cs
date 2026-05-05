@@ -17,7 +17,7 @@ public static class InfrastructureServiceRegistration
             options.UseMySql(
                 connectionString,
                 ServerVersion.Parse("8.0.36-mysql"),
-                mysqlOptions => mysqlOptions.MigrationsAssembly(typeof(EnemPrepDbContext).Assembly.FullName));
+                mysqlOptions => mysqlOptions.MigrationsAssembly("EnemPrep.Infrastructure"));
 
             // SEGURANCA: nunca logar valores de parâmetros (senhas, emails, tokens)
             // mesmo que o nível de log esteja muito verboso
