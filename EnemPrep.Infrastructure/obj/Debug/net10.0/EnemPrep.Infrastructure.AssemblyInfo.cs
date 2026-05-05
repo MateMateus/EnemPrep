@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnemPrep.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1caa991781883b21e07701d93b06788d3530d74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4cd04c33c0564fcce2ec46598dca39382bfb3f6")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnemPrep.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnemPrep.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnemPrep.Infrastructure.Migrations
 {
     [DbContext(typeof(EnemPrepDbContext))]
-    [Migration("20260505185823_InitialMysql")]
+    [Migration("20260505192328_InitialMysql")]
     partial class InitialMysql
     {
         /// <inheritdoc />
