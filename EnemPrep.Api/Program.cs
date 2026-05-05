@@ -19,14 +19,24 @@ app.UseSecurityHeaders();
 
 app.UseExceptionHandler();
 
+// Executa as migrations do banco de dados em todos os ambientes (Dev e Produção)
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<EnemPrepDbContext>();
+    await context.Database.MigrateAsync();
+    
+    // Opcional: Só executa o Seed se for desenvolvimento, ou manter para prod
+    // await DatabaseSeeder.SeedAsync(context);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<EnemPrepDbContext>();
-    await context.Database.MigrateAsync();
-    await DatabaseSeeder.SeedAsync(context);
+    
+    // Executa os dados iniciais do seed apenas em desenvolvimento
+    using var devScope = app.Services.CreateScope();
+    var devContext = devScope.ServiceProvider.GetRequiredService<EnemPrepDbContext>();
+    await DatabaseSeeder.SeedAsync(devContext);
 }
 
 // HTTPS obrigatório em todos os ambientes

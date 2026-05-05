@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnemPrep.Infrastructure.Migrations
 {
     [DbContext(typeof(EnemPrepDbContext))]
-    [Migration("20260505170439_InitialMySql")]
-    partial class InitialMySql
+    [Migration("20260505185823_InitialMysql")]
+    partial class InitialMysql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
