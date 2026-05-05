@@ -17,10 +17,6 @@ public class TentativaQuestaoConfiguration : IEntityTypeConfiguration<TentativaQ
 
         builder.Property(t => t.TempoGastoSegundos)
             .IsRequired();
-
-        builder.Property(t => t.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasOne(t => t.AlternativaSelecionada)
             .WithMany()
             .HasForeignKey(t => t.AlternativaSelecionadaId)

@@ -18,10 +18,6 @@ public class AssuntoConfiguration : IEntityTypeConfiguration<Assunto>
 
         builder.Property(a => a.Descricao)
             .HasMaxLength(1000);
-
-        builder.Property(a => a.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasMany(a => a.Questoes)
             .WithOne(q => q.Assunto)
             .HasForeignKey(q => q.AssuntoId)

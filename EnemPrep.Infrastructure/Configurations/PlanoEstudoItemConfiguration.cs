@@ -19,10 +19,6 @@ public class PlanoEstudoItemConfiguration : IEntityTypeConfiguration<PlanoEstudo
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50);
-
-        builder.Property(i => i.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasOne(i => i.Assunto)
             .WithMany()
             .HasForeignKey(i => i.AssuntoId)

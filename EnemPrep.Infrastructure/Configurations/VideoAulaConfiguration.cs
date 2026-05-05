@@ -22,8 +22,5 @@ public class VideoAulaConfiguration : IEntityTypeConfiguration<VideoAula>
 
         builder.Property(v => v.DuracaoSegundos)
             .IsRequired();
-
-        builder.Property(v => v.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

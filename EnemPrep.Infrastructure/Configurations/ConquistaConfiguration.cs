@@ -25,10 +25,6 @@ public class ConquistaConfiguration : IEntityTypeConfiguration<Conquista>
 
         builder.Property(c => c.PontosZ)
             .IsRequired();
-
-        builder.Property(c => c.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasMany(c => c.UsuariosConquista)
             .WithOne(uc => uc.Conquista)
             .HasForeignKey(uc => uc.ConquistaId)

@@ -21,10 +21,6 @@ public class SimuladoConfiguration : IEntityTypeConfiguration<Simulado>
 
         builder.Property(s => s.DuracaoMaxima)
             .IsRequired();
-
-        builder.Property(s => s.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasMany(s => s.Questoes)
             .WithOne(sq => sq.Simulado)
             .HasForeignKey(sq => sq.SimuladoId)

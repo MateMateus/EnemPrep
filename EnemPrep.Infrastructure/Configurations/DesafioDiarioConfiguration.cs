@@ -21,10 +21,6 @@ public class DesafioDiarioConfiguration : IEntityTypeConfiguration<DesafioDiario
 
         builder.Property(d => d.XPRecompensa)
             .IsRequired();
-
-        builder.Property(d => d.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasOne(d => d.Questao)
             .WithMany()
             .HasForeignKey(d => d.QuestaoId)

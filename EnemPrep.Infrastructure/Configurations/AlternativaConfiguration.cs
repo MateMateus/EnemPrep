@@ -18,8 +18,5 @@ public class AlternativaConfiguration : IEntityTypeConfiguration<Alternativa>
 
         builder.Property(a => a.Correta)
             .IsRequired();
-
-        builder.Property(a => a.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

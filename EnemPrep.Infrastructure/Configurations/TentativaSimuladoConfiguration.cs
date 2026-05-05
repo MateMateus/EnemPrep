@@ -20,10 +20,6 @@ public class TentativaSimuladoConfiguration : IEntityTypeConfiguration<Tentativa
 
         builder.Property(ts => ts.NotaTotalBruta)
             .IsRequired(false);
-
-        builder.Property(ts => ts.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasOne(ts => ts.Usuario)
             .WithMany() // Usuario nao tem colecao de tentativas de simulado
             .HasForeignKey(ts => ts.UsuarioId)

@@ -20,10 +20,6 @@ public class PerfilUsuarioConfiguration : IEntityTypeConfiguration<PerfilUsuario
         builder.Property(p => p.NomeApresentacao)
             .IsRequired()
             .HasMaxLength(100);
-
-        builder.Property(p => p.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.Navigation(p => p.Usuarios).HasField("_usuarios");
     }
 }

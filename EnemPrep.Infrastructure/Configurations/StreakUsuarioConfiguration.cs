@@ -23,8 +23,5 @@ public class StreakUsuarioConfiguration : IEntityTypeConfiguration<StreakUsuario
 
         builder.Property(s => s.UltimaAtividade)
             .IsRequired();
-
-        builder.Property(s => s.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

@@ -26,10 +26,6 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         builder.Property(u => u.SenhaHash)
             .IsRequired()
             .HasMaxLength(500);
-
-        builder.Property(u => u.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasOne(u => u.PerfilUsuario)
             .WithMany(p => p.Usuarios)
             .HasForeignKey(u => u.PerfilUsuarioId)

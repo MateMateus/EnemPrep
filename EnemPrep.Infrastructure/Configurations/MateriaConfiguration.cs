@@ -18,10 +18,6 @@ public class MateriaConfiguration : IEntityTypeConfiguration<Materia>
 
         builder.Property(m => m.Descricao)
             .HasMaxLength(1000);
-
-        builder.Property(m => m.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasMany(m => m.Assuntos)
             .WithOne(a => a.Materia)
             .HasForeignKey(a => a.MateriaId)

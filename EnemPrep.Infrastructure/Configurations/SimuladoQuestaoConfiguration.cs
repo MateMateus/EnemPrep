@@ -14,10 +14,6 @@ public class SimuladoQuestaoConfiguration : IEntityTypeConfiguration<SimuladoQue
 
         builder.Property(sq => sq.Ordem)
             .IsRequired();
-
-        builder.Property(sq => sq.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         // Relacionamentos configurados na outra ponta (Simulado e Questao) porem confirmamos obrigatorio aqui
         builder.HasOne(sq => sq.Questao)
             .WithMany() // Questão não possui lista inversa para n poluir agregado

@@ -26,10 +26,6 @@ public class QuestaoConfiguration : IEntityTypeConfiguration<Questao>
 
         builder.Property(q => q.VideoExplicacaoUrl)
             .HasMaxLength(500);
-
-        builder.Property(q => q.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasMany(q => q.Alternativas)
             .WithOne(a => a.Questao)
             .HasForeignKey(a => a.QuestaoId)

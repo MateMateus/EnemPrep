@@ -21,10 +21,6 @@ public class PlanoEstudoConfiguration : IEntityTypeConfiguration<PlanoEstudo>
 
         builder.Property(p => p.DataFim)
             .IsRequired();
-
-        builder.Property(p => p.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         builder.HasMany(p => p.Itens)
             .WithOne(i => i.PlanoEstudo)
             .HasForeignKey(i => i.PlanoEstudoId)

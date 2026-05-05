@@ -14,10 +14,6 @@ public class RespostaSimuladoConfiguration : IEntityTypeConfiguration<RespostaSi
 
         builder.Property(rs => rs.Correta)
             .IsRequired();
-
-        builder.Property(rs => rs.DataCriacao)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
         // Pode ser nulo se passou em branco
         builder.Property(rs => rs.AlternativaId)
             .IsRequired(false);
