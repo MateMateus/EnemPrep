@@ -70,7 +70,7 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.2, )"
             }
           },
           "imports": [
@@ -1271,15 +1271,15 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.2, )"
             },
             "Microsoft.Extensions.Http": {
               "target": "Package",
               "version": "[10.0.0-preview.1.25080.5, )"
             },
-            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+            "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[9.0.0, )"
             },
             "SixLabors.ImageSharp": {
               "target": "Package",

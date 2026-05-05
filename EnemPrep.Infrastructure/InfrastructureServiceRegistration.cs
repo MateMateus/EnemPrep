@@ -13,9 +13,11 @@ public static class InfrastructureServiceRegistration
     {
         services.AddDbContext<EnemPrepDbContext>(options =>
         {
-            options.UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection"),
-                npgsqlOptions => npgsqlOptions.MigrationsAssembly(typeof(EnemPrepDbContext).Assembly.FullName));
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            options.UseMySql(
+                connectionString,
+                ServerVersion.Parse("8.0.36-mysql"),
+                mysqlOptions => mysqlOptions.MigrationsAssembly(typeof(EnemPrepDbContext).Assembly.FullName));
 
             // SEGURANCA: nunca logar valores de parâmetros (senhas, emails, tokens)
             // mesmo que o nível de log esteja muito verboso

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnemPrep.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5c9811b4de5923f6df6e20fcd4d87dced509d74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8752e44acc9e47955d8d072c0e1b4a7a074be852")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnemPrep.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnemPrep.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
