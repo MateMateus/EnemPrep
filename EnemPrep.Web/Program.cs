@@ -109,12 +109,12 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// HTTPS Redirection: apenas em producão
-// Em dev, redirecionar HTTP->HTTPS destrói o cookie de sessão (scheme muda, SameSite impede envio)
-if (!app.Environment.IsDevelopment())
+// Configuração para Proxy Reverso (EasyPanel/Traefik)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    app.UseHttpsRedirection();
-}
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | 
+                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
 
 app.UseRouting();
 app.UseSession(); // deve vir antes de UseAuthorization
