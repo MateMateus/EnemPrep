@@ -57,8 +57,12 @@ if (app.Environment.IsDevelopment())
     await DatabaseSeeder.SeedAsync(devContext);
 }
 
-// HTTPS obrigatório em todos os ambientes
-app.UseHttpsRedirection();
+// Configuração para Proxy Reverso (EasyPanel/Traefik)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | 
+                       Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
 
 app.UseStaticFiles();
 
