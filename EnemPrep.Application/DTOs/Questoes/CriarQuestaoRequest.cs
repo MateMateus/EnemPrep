@@ -8,6 +8,7 @@ public record CriarQuestaoRequest(
     Guid AssuntoId,
     string? Explicacao,
     string? VideoExplicacaoUrl,
+    string? ImagemUrl,
     IReadOnlyList<CriarAlternativaRequest> Alternativas,
     Guid? LivroId = null,
     Guid? LivroTemaId = null

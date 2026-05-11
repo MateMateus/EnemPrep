@@ -119,7 +119,7 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         };
         var alternativas = alternativasPreenchidas.Select(a => (a.Texto!, a.IsCorreta));
 
-        var resultado = await questaoClient.CriarAsync(vm.Enunciado, dificuldadeInt, vm.AssuntoId, vm.Explicacao, vm.VideoExplicacaoUrl, alternativas, vm.LivroId, vm.LivroTemaId, ct);
+        var resultado = await questaoClient.CriarAsync(vm.Enunciado, dificuldadeInt, vm.AssuntoId, vm.Explicacao, vm.VideoExplicacaoUrl, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
         if (resultado is null)
         {
             logger.LogError("Falha na API ao criar questão. AssuntoId={AssuntoId}, Enunciado='{Enunciado}'", vm.AssuntoId, vm.Enunciado[..Math.Min(50, vm.Enunciado.Length)]);
@@ -154,6 +154,7 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
             Dificuldade = questao.Dificuldade,
             Explicacao = questao.Explicacao,
             VideoExplicacaoUrl = questao.VideoExplicacaoUrl,
+            ImagemUrlExistente = questao.ImagemUrl,
             Alternativas = questao.Alternativas.Select(a => new AlternativaViewModel { Texto = a.Texto, IsCorreta = a.IsCorreta }).ToList()
         };
 
@@ -197,7 +198,7 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         int dificuldadeInt = vm.Dificuldade switch { "Facil" => 1, "Medio" => 2, "Dificil" => 3, _ => 2 };
         var alternativas = alternativasPreenchidas.Select(a => (a.Texto!, a.IsCorreta));
 
-        var resultado = await questaoClient.AtualizarAsync(vm.Id, vm.Enunciado, dificuldadeInt, vm.Explicacao, vm.VideoExplicacaoUrl, alternativas, vm.LivroId, vm.LivroTemaId, ct);
+        var resultado = await questaoClient.AtualizarAsync(vm.Id, vm.Enunciado, dificuldadeInt, vm.Explicacao, vm.VideoExplicacaoUrl, vm.ImagemUrlExistente, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
         
         if (resultado is null)
         {

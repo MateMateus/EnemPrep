@@ -7,6 +7,7 @@ public record AtualizarQuestaoRequest(
     NivelDificuldade Dificuldade,
     string? Explicacao,
     string? VideoExplicacaoUrl,
+    string? ImagemUrl,
     IReadOnlyList<CriarAlternativaRequest> Alternativas,
     Guid? LivroId = null,
     Guid? LivroTemaId = null

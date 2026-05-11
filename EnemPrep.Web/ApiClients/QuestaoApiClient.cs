@@ -10,12 +10,12 @@ public interface IQuestaoApiClient
     Task<QuestaoViewModel?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<QuestaoViewModel?> CriarAsync(
         string enunciado, int dificuldade, Guid assuntoId, string? explicacao, string? videoExplicacaoUrl,
-        IEnumerable<(string Texto, bool IsCorreta)> alternativas,
+        IEnumerable<(string Texto, bool IsCorreta)> alternativas, Microsoft.AspNetCore.Http.IFormFile? imagemArquivo,
         Guid? livroId = null, Guid? livroTemaId = null,
         CancellationToken ct = default);
     Task<QuestaoViewModel?> AtualizarAsync(
-        Guid id, string enunciado, int dificuldade, string? explicacao, string? videoExplicacaoUrl,
-        IEnumerable<(string Texto, bool IsCorreta)> alternativas,
+        Guid id, string enunciado, int dificuldade, string? explicacao, string? videoExplicacaoUrl, string? imagemUrlExistente,
+        IEnumerable<(string Texto, bool IsCorreta)> alternativas, Microsoft.AspNetCore.Http.IFormFile? imagemArquivo,
         Guid? livroId = null, Guid? livroTemaId = null,
         CancellationToken ct = default);
     Task<ResultadoQuestaoViewModel?> ResponderAsync(Guid usuarioId, Guid questaoId, Guid alternativaId, int tempoGasto, CancellationToken ct = default);
@@ -52,25 +52,44 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
 
     public async Task<QuestaoViewModel?> CriarAsync(
         string enunciado, int dificuldade, Guid assuntoId, string? explicacao, string? videoExplicacaoUrl,
-        IEnumerable<(string Texto, bool IsCorreta)> alternativas,
+        IEnumerable<(string Texto, bool IsCorreta)> alternativas, Microsoft.AspNetCore.Http.IFormFile? imagemArquivo,
         Guid? livroId = null, Guid? livroTemaId = null,
         CancellationToken ct = default)
     {
         try
         {
-            var payload = new
-            {
-                Enunciado = enunciado,
-                Dificuldade = dificuldade,
-                AssuntoId = assuntoId,
-                Explicacao = string.IsNullOrWhiteSpace(explicacao) ? (string?)null : explicacao,
-                VideoExplicacaoUrl = string.IsNullOrWhiteSpace(videoExplicacaoUrl) ? (string?)null : videoExplicacaoUrl,
-                Alternativas = alternativas.Select(a => new { Texto = a.Texto, Correta = a.IsCorreta }),
-                LivroId = livroId,
-                LivroTemaId = livroTemaId
-            };
+            using var content = new MultipartFormDataContent();
+            content.Add(new StringContent(enunciado), "Enunciado");
+            content.Add(new StringContent(dificuldade.ToString()), "Dificuldade");
+            content.Add(new StringContent(assuntoId.ToString()), "AssuntoId");
+            
+            if (!string.IsNullOrWhiteSpace(explicacao))
+                content.Add(new StringContent(explicacao), "Explicacao");
+                
+            if (!string.IsNullOrWhiteSpace(videoExplicacaoUrl))
+                content.Add(new StringContent(videoExplicacaoUrl), "VideoExplicacaoUrl");
 
-            var httpResponse = await http.PostAsJsonAsync("api/questoes", payload, ct);
+            if (livroId.HasValue)
+                content.Add(new StringContent(livroId.Value.ToString()), "LivroId");
+
+            if (livroTemaId.HasValue)
+                content.Add(new StringContent(livroTemaId.Value.ToString()), "LivroTemaId");
+
+            var altArray = alternativas.ToArray();
+            for (int i = 0; i < altArray.Length; i++)
+            {
+                content.Add(new StringContent(altArray[i].Texto), $"Alternativas[{i}].Texto");
+                content.Add(new StringContent(altArray[i].IsCorreta.ToString().ToLower()), $"Alternativas[{i}].Correta");
+            }
+
+            if (imagemArquivo != null && imagemArquivo.Length > 0)
+            {
+                var streamContent = new StreamContent(imagemArquivo.OpenReadStream());
+                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(imagemArquivo.ContentType);
+                content.Add(streamContent, "imagemArquivo", imagemArquivo.FileName);
+            }
+
+            var httpResponse = await http.PostAsync("api/questoes", content, ct);
             if (!httpResponse.IsSuccessStatusCode)
             {
                 var errorBody = await httpResponse.Content.ReadAsStringAsync(ct);
@@ -88,25 +107,47 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
     }
 
     public async Task<QuestaoViewModel?> AtualizarAsync(
-        Guid id, string enunciado, int dificuldade, string? explicacao, string? videoExplicacaoUrl,
-        IEnumerable<(string Texto, bool IsCorreta)> alternativas,
+        Guid id, string enunciado, int dificuldade, string? explicacao, string? videoExplicacaoUrl, string? imagemUrlExistente,
+        IEnumerable<(string Texto, bool IsCorreta)> alternativas, Microsoft.AspNetCore.Http.IFormFile? imagemArquivo,
         Guid? livroId = null, Guid? livroTemaId = null,
         CancellationToken ct = default)
     {
         try
         {
-            var payload = new
-            {
-                Enunciado = enunciado,
-                Dificuldade = dificuldade,
-                Explicacao = string.IsNullOrWhiteSpace(explicacao) ? (string?)null : explicacao,
-                VideoExplicacaoUrl = string.IsNullOrWhiteSpace(videoExplicacaoUrl) ? (string?)null : videoExplicacaoUrl,
-                Alternativas = alternativas.Select(a => new { Texto = a.Texto, Correta = a.IsCorreta }),
-                LivroId = livroId,
-                LivroTemaId = livroTemaId
-            };
+            using var content = new MultipartFormDataContent();
+            content.Add(new StringContent(enunciado), "Enunciado");
+            content.Add(new StringContent(dificuldade.ToString()), "Dificuldade");
+            
+            if (!string.IsNullOrWhiteSpace(explicacao))
+                content.Add(new StringContent(explicacao), "Explicacao");
+                
+            if (!string.IsNullOrWhiteSpace(videoExplicacaoUrl))
+                content.Add(new StringContent(videoExplicacaoUrl), "VideoExplicacaoUrl");
 
-            var httpResponse = await http.PutAsJsonAsync($"api/questoes/{id}", payload, ct);
+            if (!string.IsNullOrWhiteSpace(imagemUrlExistente))
+                content.Add(new StringContent(imagemUrlExistente), "ImagemUrl");
+
+            if (livroId.HasValue)
+                content.Add(new StringContent(livroId.Value.ToString()), "LivroId");
+
+            if (livroTemaId.HasValue)
+                content.Add(new StringContent(livroTemaId.Value.ToString()), "LivroTemaId");
+
+            var altArray = alternativas.ToArray();
+            for (int i = 0; i < altArray.Length; i++)
+            {
+                content.Add(new StringContent(altArray[i].Texto), $"Alternativas[{i}].Texto");
+                content.Add(new StringContent(altArray[i].IsCorreta.ToString().ToLower()), $"Alternativas[{i}].Correta");
+            }
+
+            if (imagemArquivo != null && imagemArquivo.Length > 0)
+            {
+                var streamContent = new StreamContent(imagemArquivo.OpenReadStream());
+                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(imagemArquivo.ContentType);
+                content.Add(streamContent, "imagemArquivo", imagemArquivo.FileName);
+            }
+
+            var httpResponse = await http.PutAsync($"api/questoes/{id}", content, ct);
             if (!httpResponse.IsSuccessStatusCode)
             {
                 var errorBody = await httpResponse.Content.ReadAsStringAsync(ct);

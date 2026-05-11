@@ -29,6 +29,9 @@ public class EditarQuestaoViewModel
     [StringLength(500)]
     public string? VideoExplicacaoUrl { get; set; }
 
+    public string? ImagemUrlExistente { get; set; }
+    public IFormFile? ImagemArquivo { get; set; }
+
     [Required]
     [MinLength(2, ErrorMessage = "Questão precisa ter ao menos 2 alternativas")]
     public List<AlternativaViewModel> Alternativas { get; set; } = new();

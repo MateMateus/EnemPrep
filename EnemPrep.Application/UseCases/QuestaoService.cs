@@ -57,7 +57,7 @@ public class QuestaoService : IQuestaoService
 
     public async Task<Result<QuestaoDto>> CriarAsync(CriarQuestaoRequest request, CancellationToken cancellationToken)
     {
-        var questao = new Questao(request.Enunciado, request.Dificuldade, request.AssuntoId, request.Explicacao, request.VideoExplicacaoUrl);
+        var questao = new Questao(request.Enunciado, request.Dificuldade, request.AssuntoId, request.Explicacao, request.VideoExplicacaoUrl, request.ImagemUrl);
         questao.VincularAoLivro(request.LivroId, request.LivroTemaId);
 
         foreach (var alt in request.Alternativas)
@@ -76,7 +76,7 @@ public class QuestaoService : IQuestaoService
         var questao = await _questaoRepository.GetByIdTrackingAsync(id, cancellationToken);
         if (questao is null) return Result<QuestaoDto>.Fail("Questão não encontrada.");
 
-        questao.Atualizar(request.Enunciado, request.Dificuldade, request.Explicacao, request.VideoExplicacaoUrl);
+        questao.Atualizar(request.Enunciado, request.Dificuldade, request.Explicacao, request.VideoExplicacaoUrl, request.ImagemUrl);
         questao.VincularAoLivro(request.LivroId, request.LivroTemaId);
         questao.SincronizarAlternativas(request.Alternativas.Select(a => (a.Texto, a.Correta)));
 
@@ -161,6 +161,7 @@ public class QuestaoService : IQuestaoService
             q.Assunto?.Nome ?? string.Empty,
             q.Explicacao,
             q.VideoExplicacaoUrl,
+            q.ImagemUrl,
             alternativas,
             q.LivroId,
             q.LivroTemaId);

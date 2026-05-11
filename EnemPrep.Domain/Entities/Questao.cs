@@ -8,6 +8,7 @@ public class Questao : Entity
     public NivelDificuldade Dificuldade { get; private set; }
     public string? Explicacao { get; private set; }
     public string? VideoExplicacaoUrl { get; private set; }
+    public string? ImagemUrl { get; private set; }
 
     public Guid AssuntoId { get; private set; }
     public Assunto Assunto { get; private set; } = null!;
@@ -31,7 +32,7 @@ public class Questao : Entity
         Enunciado = string.Empty;
     }
 
-    public Questao(string enunciado, NivelDificuldade dificuldade, Guid assuntoId, string? explicacao = null, string? videoExplicacaoUrl = null) : this()
+    public Questao(string enunciado, NivelDificuldade dificuldade, Guid assuntoId, string? explicacao = null, string? videoExplicacaoUrl = null, string? imagemUrl = null) : this()
     {
         if (string.IsNullOrWhiteSpace(enunciado)) throw new ArgumentException("Enunciado é obrigatório.", nameof(enunciado));
         if (assuntoId == Guid.Empty) throw new ArgumentException("Assunto é obrigatório.", nameof(assuntoId));
@@ -41,6 +42,7 @@ public class Questao : Entity
         AssuntoId = assuntoId;
         Explicacao = explicacao;
         VideoExplicacaoUrl = videoExplicacaoUrl;
+        ImagemUrl = imagemUrl;
     }
 
     public void AdicionarAlternativa(Alternativa alternativa)
@@ -55,7 +57,7 @@ public class Questao : Entity
         LivroTemaId = livroTemaId;
     }
 
-    public void Atualizar(string enunciado, NivelDificuldade dificuldade, string? explicacao, string? videoExplicacaoUrl)
+    public void Atualizar(string enunciado, NivelDificuldade dificuldade, string? explicacao, string? videoExplicacaoUrl, string? imagemUrl)
     {
         if (string.IsNullOrWhiteSpace(enunciado)) throw new ArgumentException("Enunciado é obrigatório.", nameof(enunciado));
 
@@ -63,6 +65,7 @@ public class Questao : Entity
         Dificuldade = dificuldade;
         Explicacao = explicacao;
         VideoExplicacaoUrl = videoExplicacaoUrl;
+        ImagemUrl = imagemUrl;
     }
 
     public void SincronizarAlternativas(IEnumerable<(string Texto, bool Correta)> novasAlternativasArr)

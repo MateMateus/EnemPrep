@@ -53,6 +53,13 @@
         <div class="p-6 md:p-8">
             <h3 class="text-xl font-medium text-gray-900 mb-8 whitespace-pre-wrap">@Model.Enunciado</h3>
 
+            @if (!string.IsNullOrEmpty(Model.ImagemUrl))
+            {
+                <div class="mb-8">
+                    <img src="@Model.ImagemUrl" alt="Imagem da Questão" class="max-w-full h-auto rounded-lg border border-gray-200 shadow-sm mx-auto" style="max-height: 500px; object-fit: contain;" />
+                </div>
+            }
+
             <form id="form-responder">
                 <div class="space-y-4">
                     @foreach (var alternativa in Model.Alternativas)

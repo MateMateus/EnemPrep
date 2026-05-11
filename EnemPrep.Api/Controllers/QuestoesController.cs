@@ -46,9 +46,23 @@ public class QuestoesController : ControllerBase
 
 
     [HttpPost("questoes")]
-    public async Task<IActionResult> Criar([FromBody] CriarQuestaoRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Criar(
+        [FromForm] CriarQuestaoRequest request, 
+        [FromForm] IFormFile? imagemArquivo,
+        [FromServices] IFileStorageService storageService,
+        CancellationToken cancellationToken)
     {
-        var result = await _questaoService.CriarAsync(request, cancellationToken);
+        string? urlImagem = request.ImagemUrl;
+
+        if (imagemArquivo != null && imagemArquivo.Length > 0)
+        {
+            using var stream = imagemArquivo.OpenReadStream();
+            urlImagem = await storageService.SaveFileAsync(stream, imagemArquivo.FileName, "questoes", cancellationToken);
+        }
+
+        var reqWithImage = request with { ImagemUrl = urlImagem };
+
+        var result = await _questaoService.CriarAsync(reqWithImage, cancellationToken);
 
         if (!result.Success)
             return BadRequest(ApiResponse<object>.Fail(result.ErrorMessage!));
@@ -57,9 +71,24 @@ public class QuestoesController : ControllerBase
     }
 
     [HttpPut("questoes/{id:guid}")]
-    public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarQuestaoRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Atualizar(
+        Guid id, 
+        [FromForm] AtualizarQuestaoRequest request, 
+        [FromForm] IFormFile? imagemArquivo,
+        [FromServices] IFileStorageService storageService,
+        CancellationToken cancellationToken)
     {
-        var result = await _questaoService.AtualizarAsync(id, request, cancellationToken);
+        string? urlImagem = request.ImagemUrl;
+
+        if (imagemArquivo != null && imagemArquivo.Length > 0)
+        {
+            using var stream = imagemArquivo.OpenReadStream();
+            urlImagem = await storageService.SaveFileAsync(stream, imagemArquivo.FileName, "questoes", cancellationToken);
+        }
+
+        var reqWithImage = request with { ImagemUrl = urlImagem };
+
+        var result = await _questaoService.AtualizarAsync(id, reqWithImage, cancellationToken);
 
         if (!result.Success)
             return BadRequest(ApiResponse<object>.Fail(result.ErrorMessage!));
