@@ -1,3 +1,4 @@
+using EnemPrep.Api.DTOs;
 using EnemPrep.Api.Extensions;
 using EnemPrep.Application.Common;
 using EnemPrep.Application.DTOs.Questoes;
@@ -13,10 +14,12 @@ namespace EnemPrep.Api.Controllers;
 public class QuestoesController : ControllerBase
 {
     private readonly IQuestaoService _questaoService;
+    private readonly ILogger<QuestoesController> _logger;
 
-    public QuestoesController(IQuestaoService questaoService)
+    public QuestoesController(IQuestaoService questaoService, ILogger<QuestoesController> logger)
     {
         _questaoService = questaoService;
+        _logger = logger;
     }
 
     [HttpGet("questoes/{id:guid}")]
@@ -47,12 +50,16 @@ public class QuestoesController : ControllerBase
 
     [HttpPost("questoes")]
     public async Task<IActionResult> Criar(
-        [FromForm] CriarQuestaoRequest request, 
+        [FromForm] CriarQuestaoFormRequest form, 
         [FromForm] IFormFile? imagemArquivo,
         [FromServices] IFileStorageService storageService,
         CancellationToken cancellationToken)
     {
-        string? urlImagem = request.ImagemUrl;
+        _logger.LogInformation("Criando questão: Enunciado='{Enunciado}', Dificuldade={Dificuldade}, AssuntoId={AssuntoId}, Alternativas={Count}, TemImagem={TemImagem}",
+            form.Enunciado?[..Math.Min(50, form.Enunciado?.Length ?? 0)],
+            form.Dificuldade, form.AssuntoId, form.Alternativas?.Count ?? 0, imagemArquivo != null);
+
+        string? urlImagem = form.ImagemUrl;
 
         if (imagemArquivo != null && imagemArquivo.Length > 0)
         {
@@ -60,9 +67,22 @@ public class QuestoesController : ControllerBase
             urlImagem = await storageService.SaveFileAsync(stream, imagemArquivo.FileName, "questoes", cancellationToken);
         }
 
-        var reqWithImage = request with { ImagemUrl = urlImagem };
+        var alternativas = (form.Alternativas ?? [])
+            .Select(a => new CriarAlternativaRequest(a.Texto, a.Correta))
+            .ToList();
 
-        var result = await _questaoService.CriarAsync(reqWithImage, cancellationToken);
+        var request = new CriarQuestaoRequest(
+            form.Enunciado ?? string.Empty,
+            form.Dificuldade,
+            form.AssuntoId,
+            form.Explicacao,
+            form.VideoExplicacaoUrl,
+            urlImagem,
+            alternativas,
+            form.LivroId,
+            form.LivroTemaId);
+
+        var result = await _questaoService.CriarAsync(request, cancellationToken);
 
         if (!result.Success)
             return BadRequest(ApiResponse<object>.Fail(result.ErrorMessage!));
@@ -73,12 +93,15 @@ public class QuestoesController : ControllerBase
     [HttpPut("questoes/{id:guid}")]
     public async Task<IActionResult> Atualizar(
         Guid id, 
-        [FromForm] AtualizarQuestaoRequest request, 
+        [FromForm] AtualizarQuestaoFormRequest form, 
         [FromForm] IFormFile? imagemArquivo,
         [FromServices] IFileStorageService storageService,
         CancellationToken cancellationToken)
     {
-        string? urlImagem = request.ImagemUrl;
+        _logger.LogInformation("Atualizando questão {Id}: Alternativas={Count}, TemImagem={TemImagem}",
+            id, form.Alternativas?.Count ?? 0, imagemArquivo != null);
+
+        string? urlImagem = form.ImagemUrl;
 
         if (imagemArquivo != null && imagemArquivo.Length > 0)
         {
@@ -86,9 +109,21 @@ public class QuestoesController : ControllerBase
             urlImagem = await storageService.SaveFileAsync(stream, imagemArquivo.FileName, "questoes", cancellationToken);
         }
 
-        var reqWithImage = request with { ImagemUrl = urlImagem };
+        var alternativas = (form.Alternativas ?? [])
+            .Select(a => new CriarAlternativaRequest(a.Texto, a.Correta))
+            .ToList();
 
-        var result = await _questaoService.AtualizarAsync(id, reqWithImage, cancellationToken);
+        var request = new AtualizarQuestaoRequest(
+            form.Enunciado ?? string.Empty,
+            form.Dificuldade,
+            form.Explicacao,
+            form.VideoExplicacaoUrl,
+            urlImagem,
+            alternativas,
+            form.LivroId,
+            form.LivroTemaId);
+
+        var result = await _questaoService.AtualizarAsync(id, request, cancellationToken);
 
         if (!result.Success)
             return BadRequest(ApiResponse<object>.Fail(result.ErrorMessage!));
