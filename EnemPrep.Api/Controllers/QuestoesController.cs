@@ -51,20 +51,19 @@ public class QuestoesController : ControllerBase
     [HttpPost("questoes")]
     public async Task<IActionResult> Criar(
         [FromForm] CriarQuestaoFormRequest form, 
-        [FromForm] IFormFile? imagemArquivo,
         [FromServices] IFileStorageService storageService,
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("Criando questão: Enunciado='{Enunciado}', Dificuldade={Dificuldade}, AssuntoId={AssuntoId}, Alternativas={Count}, TemImagem={TemImagem}",
             form.Enunciado?[..Math.Min(50, form.Enunciado?.Length ?? 0)],
-            form.Dificuldade, form.AssuntoId, form.Alternativas?.Count ?? 0, imagemArquivo != null);
+            form.Dificuldade, form.AssuntoId, form.Alternativas?.Count ?? 0, form.ImagemArquivo != null);
 
         string? urlImagem = form.ImagemUrl;
 
-        if (imagemArquivo != null && imagemArquivo.Length > 0)
+        if (form.ImagemArquivo != null && form.ImagemArquivo.Length > 0)
         {
-            using var stream = imagemArquivo.OpenReadStream();
-            urlImagem = await storageService.SaveFileAsync(stream, imagemArquivo.FileName, "questoes", cancellationToken);
+            using var stream = form.ImagemArquivo.OpenReadStream();
+            urlImagem = await storageService.SaveFileAsync(stream, form.ImagemArquivo.FileName, "questoes", cancellationToken);
         }
 
         var alternativas = (form.Alternativas ?? [])
@@ -94,19 +93,18 @@ public class QuestoesController : ControllerBase
     public async Task<IActionResult> Atualizar(
         Guid id, 
         [FromForm] AtualizarQuestaoFormRequest form, 
-        [FromForm] IFormFile? imagemArquivo,
         [FromServices] IFileStorageService storageService,
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("Atualizando questão {Id}: Alternativas={Count}, TemImagem={TemImagem}",
-            id, form.Alternativas?.Count ?? 0, imagemArquivo != null);
+            id, form.Alternativas?.Count ?? 0, form.ImagemArquivo != null);
 
         string? urlImagem = form.ImagemUrl;
 
-        if (imagemArquivo != null && imagemArquivo.Length > 0)
+        if (form.ImagemArquivo != null && form.ImagemArquivo.Length > 0)
         {
-            using var stream = imagemArquivo.OpenReadStream();
-            urlImagem = await storageService.SaveFileAsync(stream, imagemArquivo.FileName, "questoes", cancellationToken);
+            using var stream = form.ImagemArquivo.OpenReadStream();
+            urlImagem = await storageService.SaveFileAsync(stream, form.ImagemArquivo.FileName, "questoes", cancellationToken);
         }
 
         var alternativas = (form.Alternativas ?? [])

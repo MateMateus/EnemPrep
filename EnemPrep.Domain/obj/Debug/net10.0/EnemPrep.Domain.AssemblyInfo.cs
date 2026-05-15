@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnemPrep.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4cd04c33c0564fcce2ec46598dca39382bfb3f6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d3ae620e4592955b3efc9af84a8f07d3314fb0c")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnemPrep.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnemPrep.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

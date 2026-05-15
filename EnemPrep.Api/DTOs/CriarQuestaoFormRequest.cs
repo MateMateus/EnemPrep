@@ -1,4 +1,5 @@
 using EnemPrep.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace EnemPrep.Api.DTOs;
 
@@ -15,6 +16,7 @@ public class CriarQuestaoFormRequest
     public string? Explicacao { get; set; }
     public string? VideoExplicacaoUrl { get; set; }
     public string? ImagemUrl { get; set; }
+    public IFormFile? ImagemArquivo { get; set; }
     public List<AlternativaFormItem> Alternativas { get; set; } = [];
     public Guid? LivroId { get; set; }
     public Guid? LivroTemaId { get; set; }
@@ -30,6 +32,7 @@ public class AtualizarQuestaoFormRequest
     public string? Explicacao { get; set; }
     public string? VideoExplicacaoUrl { get; set; }
     public string? ImagemUrl { get; set; }
+    public IFormFile? ImagemArquivo { get; set; }
     public List<AlternativaFormItem> Alternativas { get; set; } = [];
     public Guid? LivroId { get; set; }
     public Guid? LivroTemaId { get; set; }

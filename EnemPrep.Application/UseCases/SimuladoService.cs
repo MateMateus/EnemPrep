@@ -60,6 +60,7 @@ public class SimuladoService : ISimuladoService
                 sq.Questao.Assunto?.Nome ?? string.Empty,
                 sq.Questao.Explicacao,
                 sq.Questao.VideoExplicacaoUrl,
+                sq.Questao.ImagemUrl,
                 sq.Questao.Alternativas.Select(a => new AlternativaDto(a.Id, a.Texto, a.Correta)).ToList()
             )).ToList()
         };

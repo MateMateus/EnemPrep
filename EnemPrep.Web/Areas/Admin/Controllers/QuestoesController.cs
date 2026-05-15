@@ -1,4 +1,4 @@
-using EnemPrep.Web.ApiClients;
+﻿using EnemPrep.Web.ApiClients;
 using EnemPrep.Web.Areas.Admin.ViewModels.Questoes;
 using EnemPrep.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
@@ -119,12 +119,15 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         };
         var alternativas = alternativasPreenchidas.Select(a => (a.Texto!, a.IsCorreta));
 
-        var resultado = await questaoClient.CriarAsync(vm.Enunciado, dificuldadeInt, vm.AssuntoId, vm.Explicacao, vm.VideoExplicacaoUrl, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
-        if (resultado is null)
+        QuestaoViewModel? resultado = null;
+        try
         {
-            logger.LogError("Falha na API ao criar questão. AssuntoId={AssuntoId}, Enunciado='{Enunciado}'", vm.AssuntoId, vm.Enunciado[..Math.Min(50, vm.Enunciado.Length)]);
-            ModelState.AddModelError(string.Empty, "Erro ao criar questão. Verifique se a API está rodando.");
-            
+            resultado = await questaoClient.CriarAsync(vm.Enunciado, dificuldadeInt, vm.AssuntoId, vm.Explicacao, vm.VideoExplicacaoUrl, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Falha na API ao criar questão. AssuntoId={AssuntoId}, Enunciado='{Enunciado}'", vm.AssuntoId, vm.Enunciado[..Math.Min(50, vm.Enunciado.Length)]);
+            ModelState.AddModelError(string.Empty, "Erro da API: " + ex.Message);
             var livros = await livroClient.GetAllAsync(ct: ct);
             ViewBag.Livros = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(livros, "Id", "Titulo", vm.LivroId);
             ViewData["Title"] = "Nova Questão";
@@ -230,3 +233,5 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         return Json(new { data = new { temas = livro.Temas } });
     }
 }
+
+

@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using EnemPrep.Web.Models.Shared;
 
 namespace EnemPrep.Web.ApiClients;
@@ -86,15 +86,14 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
             {
                 var streamContent = new StreamContent(imagemArquivo.OpenReadStream());
                 streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(imagemArquivo.ContentType);
-                content.Add(streamContent, "imagemArquivo", imagemArquivo.FileName);
+                content.Add(streamContent, "ImagemArquivo", imagemArquivo.FileName);
             }
 
             var httpResponse = await http.PostAsync("api/questoes", content, ct);
             if (!httpResponse.IsSuccessStatusCode)
             {
                 var errorBody = await httpResponse.Content.ReadAsStringAsync(ct);
-                Console.WriteLine($"[QuestaoApiClient] ERRO {httpResponse.StatusCode}: {errorBody}");
-                return null;
+                throw new ApplicationException($"API Error ({httpResponse.StatusCode}): {errorBody}");
             }
             var response = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<QuestaoViewModel>>(ct);
             return response?.Data;
@@ -144,15 +143,14 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
             {
                 var streamContent = new StreamContent(imagemArquivo.OpenReadStream());
                 streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(imagemArquivo.ContentType);
-                content.Add(streamContent, "imagemArquivo", imagemArquivo.FileName);
+                content.Add(streamContent, "ImagemArquivo", imagemArquivo.FileName);
             }
 
             var httpResponse = await http.PutAsync($"api/questoes/{id}", content, ct);
             if (!httpResponse.IsSuccessStatusCode)
             {
                 var errorBody = await httpResponse.Content.ReadAsStringAsync(ct);
-                Console.WriteLine($"[QuestaoApiClient] ERRO {httpResponse.StatusCode}: {errorBody}");
-                return null;
+                throw new ApplicationException($"API Error ({httpResponse.StatusCode}): {errorBody}");
             }
             var response = await httpResponse.Content.ReadFromJsonAsync<ApiResponse<QuestaoViewModel>>(ct);
             return response?.Data;
@@ -201,3 +199,5 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
         catch { return []; }
     }
 }
+
+

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiTester")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5c9811b4de5923f6df6e20fcd4d87dced509d74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+552b6f180abfb7e9b1aa91ac50ad41b7bd06ae45")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApiTester")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApiTester")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

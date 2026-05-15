@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj": {}
+    "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj": {
+    "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj",
+        "projectUniqueName": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj",
         "projectName": "ApiTester",
-        "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj",
+        "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\ApiTester.csproj",
         "packagesPath": "C:\\Users\\Mateus\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\obj\\",
+        "outputPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\ApiTester\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,11 +33,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj": {
-                "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj"
+              "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj": {
+                "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj"
               },
-              "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj": {
-                "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj"
+              "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj"
               }
             }
           }
@@ -351,14 +351,14 @@
         }
       }
     },
-    "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj": {
+    "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj",
         "projectName": "EnemPrep.Application",
-        "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj",
+        "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj",
         "packagesPath": "C:\\Users\\Mateus\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\obj\\",
+        "outputPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -380,8 +380,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj": {
-                "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj"
+              "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj": {
+                "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj"
               }
             }
           }
@@ -713,14 +713,14 @@
         }
       }
     },
-    "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj": {
+    "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj",
         "projectName": "EnemPrep.Domain",
-        "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj",
+        "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\EnemPrep.Domain.csproj",
         "packagesPath": "C:\\Users\\Mateus\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\obj\\",
+        "outputPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1053,14 +1053,14 @@
         }
       }
     },
-    "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj": {
+    "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj",
         "projectName": "EnemPrep.Infrastructure",
-        "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj",
+        "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\EnemPrep.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Mateus\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1082,8 +1082,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj": {
-                "projectPath": "c:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj"
+              "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj": {
+                "projectPath": "C:\\Users\\Mateus\\source\\repos\\EnemPrep\\EnemPrep.Application\\EnemPrep.Application.csproj"
               }
             }
           }
@@ -1108,15 +1108,19 @@
               "target": "Package",
               "version": "[2.6.0, )"
             },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[10.0.3, )"
-            },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.3, )"
+              "version": "[9.0.2, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[10.0.0-preview.1.25080.5, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             },
             "SixLabors.ImageSharp": {
               "target": "Package",
