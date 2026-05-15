@@ -413,6 +413,10 @@ namespace EnemPrep.Infrastructure.Migrations
                     b.Property<Guid?>("LivroTemaId")
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("ImagemUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
                     b.Property<string>("VideoExplicacaoUrl")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");

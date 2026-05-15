@@ -26,6 +26,11 @@ public class QuestaoConfiguration : IEntityTypeConfiguration<Questao>
 
         builder.Property(q => q.VideoExplicacaoUrl)
             .HasMaxLength(500);
+
+        builder.Property(q => q.ImagemUrl)
+            .HasMaxLength(1000)
+            .IsRequired(false);
+
         builder.HasMany(q => q.Alternativas)
             .WithOne(a => a.Questao)
             .HasForeignKey(a => a.QuestaoId)
