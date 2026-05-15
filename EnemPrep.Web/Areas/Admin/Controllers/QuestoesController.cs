@@ -119,7 +119,7 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         };
         var alternativas = alternativasPreenchidas.Select(a => (a.Texto!, a.IsCorreta));
 
-        QuestaoViewModel? resultado = null;
+        EnemPrep.Web.Models.Shared.QuestaoViewModel? resultado = null;
         try
         {
             resultado = await questaoClient.CriarAsync(vm.Enunciado, dificuldadeInt, vm.AssuntoId, vm.Explicacao, vm.VideoExplicacaoUrl, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
@@ -233,5 +233,6 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         return Json(new { data = new { temas = livro.Temas } });
     }
 }
+
 
 
