@@ -1,12 +1,14 @@
-using EnemPrep.Application.Interfaces;
+﻿using EnemPrep.Application.Interfaces;
 using System.IO;
 
 namespace EnemPrep.Infrastructure.Services;
 
 public class LocalFileStorageService : IFileStorageService
 {
-    public LocalFileStorageService()
+    private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
+    public LocalFileStorageService(Microsoft.Extensions.Configuration.IConfiguration configuration)
     {
+        _configuration = configuration;
     }
 
     public async Task<string> SaveFileAsync(Stream fileStream, string fileName, string folderName, CancellationToken cancellationToken = default)
@@ -25,7 +27,9 @@ public class LocalFileStorageService : IFileStorageService
         await fileStream.CopyToAsync(destStream, cancellationToken);
 
         // Retorna o caminho relativo (ex: /materiais/arquivo.pdf)
-        return $"/{folderName}/{uniqueFileName}";
+        var baseUrl = _configuration["ApiPublicUrl"]?.TrimEnd('/') ?? "";
+        if (string.IsNullOrEmpty(baseUrl)) return $"/{folderName}/{uniqueFileName}";
+        return $"{baseUrl}/{folderName}/{uniqueFileName}";
     }
 
     public Task DeleteFileAsync(string filePath, CancellationToken cancellationToken = default)
@@ -42,3 +46,4 @@ public class LocalFileStorageService : IFileStorageService
         return Task.CompletedTask;
     }
 }
+

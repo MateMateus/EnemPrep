@@ -201,11 +201,27 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         int dificuldadeInt = vm.Dificuldade switch { "Facil" => 1, "Medio" => 2, "Dificil" => 3, _ => 2 };
         var alternativas = alternativasPreenchidas.Select(a => (a.Texto!, a.IsCorreta));
 
-        var resultado = await questaoClient.AtualizarAsync(vm.Id, vm.Enunciado, dificuldadeInt, vm.Explicacao, vm.VideoExplicacaoUrl, vm.ImagemUrlExistente, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
-        
-        if (resultado is null)
+        EnemPrep.Web.Models.Shared.QuestaoViewModel? resultado = null;
+        try
+        {
+            resultado = await questaoClient.AtualizarAsync(vm.Id, vm.Enunciado, dificuldadeInt, vm.Explicacao, vm.VideoExplicacaoUrl, vm.ImagemUrlExistente, alternativas, vm.ImagemArquivo, vm.LivroId, vm.LivroTemaId, ct);
+        }
+        catch (ApplicationException ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Erro da API: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Erro interno: {ex.Message}");
+        }
+
+        if (resultado is null && ModelState.ErrorCount == 0)
         {
             ModelState.AddModelError(string.Empty, "Erro ao atualizar questão.");
+        }
+
+        if (resultado is null)
+        {
             var livros = await livroClient.GetAllAsync(ct: ct);
             ViewBag.Livros = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(livros, "Id", "Titulo", vm.LivroId);
             ViewData["Title"] = "Editar Questão";
@@ -233,6 +249,8 @@ public class QuestoesController(IQuestaoApiClient questaoClient, ILivroApiClient
         return Json(new { data = new { temas = livro.Temas } });
     }
 }
+
+
 
 
 
