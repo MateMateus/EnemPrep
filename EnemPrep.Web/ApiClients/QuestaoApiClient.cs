@@ -75,12 +75,8 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
             if (livroTemaId.HasValue)
                 content.Add(new StringContent(livroTemaId.Value.ToString()), "LivroTemaId");
 
-            var altArray = alternativas.ToArray();
-            for (int i = 0; i < altArray.Length; i++)
-            {
-                content.Add(new StringContent(altArray[i].Texto), $"Alternativas[{i}].Texto");
-                content.Add(new StringContent(altArray[i].IsCorreta.ToString().ToLower()), $"Alternativas[{i}].Correta");
-            }
+            var alternativasJson = System.Text.Json.JsonSerializer.Serialize(alternativas.Select(a => new { Texto = a.Texto, Correta = a.IsCorreta }));
+            content.Add(new StringContent(alternativasJson), "AlternativasJson");
 
             if (imagemArquivo != null && imagemArquivo.Length > 0)
             {
@@ -132,12 +128,8 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
             if (livroTemaId.HasValue)
                 content.Add(new StringContent(livroTemaId.Value.ToString()), "LivroTemaId");
 
-            var altArray = alternativas.ToArray();
-            for (int i = 0; i < altArray.Length; i++)
-            {
-                content.Add(new StringContent(altArray[i].Texto), $"Alternativas[{i}].Texto");
-                content.Add(new StringContent(altArray[i].IsCorreta.ToString().ToLower()), $"Alternativas[{i}].Correta");
-            }
+            var alternativasJson = System.Text.Json.JsonSerializer.Serialize(alternativas.Select(a => new { Texto = a.Texto, Correta = a.IsCorreta }));
+            content.Add(new StringContent(alternativasJson), "AlternativasJson");
 
             if (imagemArquivo != null && imagemArquivo.Length > 0)
             {
@@ -199,5 +191,6 @@ public class QuestaoApiClient(HttpClient http) : IQuestaoApiClient
         catch { return []; }
     }
 }
+
 
 

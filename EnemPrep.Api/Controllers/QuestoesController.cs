@@ -1,4 +1,4 @@
-using EnemPrep.Api.DTOs;
+﻿using EnemPrep.Api.DTOs;
 using EnemPrep.Api.Extensions;
 using EnemPrep.Application.Common;
 using EnemPrep.Application.DTOs.Questoes;
@@ -66,7 +66,8 @@ public class QuestoesController : ControllerBase
             urlImagem = await storageService.SaveFileAsync(stream, form.ImagemArquivo.FileName, "questoes", cancellationToken);
         }
 
-        var alternativas = (form.Alternativas ?? [])
+        var alternativasList = string.IsNullOrWhiteSpace(form.AlternativasJson) ? new List<AlternativaFormItem>() : System.Text.Json.JsonSerializer.Deserialize<List<AlternativaFormItem>>(form.AlternativasJson, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var alternativas = (alternativasList ?? [])
             .Select(a => new CriarAlternativaRequest(a.Texto, a.Correta))
             .ToList();
 
@@ -107,7 +108,8 @@ public class QuestoesController : ControllerBase
             urlImagem = await storageService.SaveFileAsync(stream, form.ImagemArquivo.FileName, "questoes", cancellationToken);
         }
 
-        var alternativas = (form.Alternativas ?? [])
+        var alternativasList = string.IsNullOrWhiteSpace(form.AlternativasJson) ? new List<AlternativaFormItem>() : System.Text.Json.JsonSerializer.Deserialize<List<AlternativaFormItem>>(form.AlternativasJson, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var alternativas = (alternativasList ?? [])
             .Select(a => new CriarAlternativaRequest(a.Texto, a.Correta))
             .ToList();
 
@@ -159,3 +161,4 @@ public class QuestoesController : ControllerBase
         return NoContent();
     }
 }
+
