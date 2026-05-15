@@ -54,9 +54,9 @@ public class QuestoesController : ControllerBase
         [FromServices] IFileStorageService storageService,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Criando questão: Enunciado='{Enunciado}', Dificuldade={Dificuldade}, AssuntoId={AssuntoId}, Alternativas={Count}, TemImagem={TemImagem}",
+        _logger.LogInformation("Criando questão: Enunciado='{Enunciado}', Dificuldade={Dificuldade}, AssuntoId={AssuntoId}, AlternativasJsonLength={Length}, TemImagem={TemImagem}",
             form.Enunciado?[..Math.Min(50, form.Enunciado?.Length ?? 0)],
-            form.Dificuldade, form.AssuntoId, form.Alternativas?.Count ?? 0, form.ImagemArquivo != null);
+            form.Dificuldade, form.AssuntoId, form.AlternativasJson.Length, form.ImagemArquivo != null);
 
         string? urlImagem = form.ImagemUrl;
 
@@ -97,8 +97,8 @@ public class QuestoesController : ControllerBase
         [FromServices] IFileStorageService storageService,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Atualizando questão {Id}: Alternativas={Count}, TemImagem={TemImagem}",
-            id, form.Alternativas?.Count ?? 0, form.ImagemArquivo != null);
+        _logger.LogInformation("Atualizando questão {Id}: AlternativasJsonLength={Length}, TemImagem={TemImagem}",
+            id, form.AlternativasJson.Length, form.ImagemArquivo != null);
 
         string? urlImagem = form.ImagemUrl;
 
@@ -161,4 +161,5 @@ public class QuestoesController : ControllerBase
         return NoContent();
     }
 }
+
 
