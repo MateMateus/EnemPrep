@@ -64,7 +64,17 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
                        Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
 });
 
-app.UseStaticFiles();
+var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+if (!Directory.Exists(wwwrootPath))
+{
+    Directory.CreateDirectory(wwwrootPath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(wwwrootPath),
+    RequestPath = ""
+});
 
 // Rate Limiter (antes do roteamento)
 app.UseRateLimiter();
