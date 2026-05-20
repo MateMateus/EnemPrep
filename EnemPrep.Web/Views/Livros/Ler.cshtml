@@ -8,7 +8,10 @@
     var apiBaseUrl = Configuration["ApiBaseUrl"]?.TrimEnd('/');
 }
 
-<div x-data="readerState()" x-init="init()" class="flex-1 w-full flex flex-col lg:flex-row overflow-hidden bg-gray-900 rounded-xl shadow-2xl relative">
+<div x-data="readerState()" x-init="init()" 
+     @@keydown.window.arrow-right.prevent="nextPage()"
+     @@keydown.window.arrow-left.prevent="prevPage()"
+     class="flex-1 w-full flex flex-col lg:flex-row overflow-hidden bg-gray-900 rounded-xl shadow-2xl relative">
     
     <!-- Reader Main Content -->
     <div class="flex-1 flex flex-col relative">
@@ -183,12 +186,6 @@
                         this.setTema(theme.Id, theme.PaginaInicial, theme.PaginaFinal);
                     }
                 }
-                
-                // Keyboard navigation
-                window.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowRight') this.nextPage();
-                    if (e.key === 'ArrowLeft') this.prevPage();
-                });
             },
 
             setTema(temaId, startPg = null, endPg = null) {
