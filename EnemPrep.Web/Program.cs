@@ -2,6 +2,16 @@ using EnemPrep.Web.ApiClients;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 104_857_600; // 100 MB
+});
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104_857_600; // 100 MB
+});
+
 // MVC com suporte a Areas (Admin separado do aluno)
 builder.Services.AddControllersWithViews();
 
