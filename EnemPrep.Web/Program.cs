@@ -92,7 +92,8 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseDeveloperExceptionPage();
+    // app.UseExceptionHandler("/Home/Error");
     // HSTS: instrui browsers a só usar HTTPS por 1 ano, incluindo subdomínios
     app.UseHsts();
 }
