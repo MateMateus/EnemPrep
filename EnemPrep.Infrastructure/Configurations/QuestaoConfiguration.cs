@@ -18,7 +18,13 @@ public class QuestaoConfiguration : IEntityTypeConfiguration<Questao>
 
         builder.Property(q => q.Dificuldade)
             .IsRequired()
-            .HasConversion<string>()
+            .HasConversion(
+                v => v.ToString(),
+                v => v == "Médio" || v == "Medio" ? EnemPrep.Domain.Enums.NivelDificuldade.Medio :
+                     v == "Fácil" || v == "Facil" ? EnemPrep.Domain.Enums.NivelDificuldade.Facil :
+                     v == "Difícil" || v == "Dificil" ? EnemPrep.Domain.Enums.NivelDificuldade.Dificil :
+                     Enum.Parse<EnemPrep.Domain.Enums.NivelDificuldade>(v)
+            )
             .HasMaxLength(50);
 
         builder.Property(q => q.Explicacao)
